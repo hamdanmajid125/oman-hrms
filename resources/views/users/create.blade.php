@@ -22,7 +22,7 @@
                                 <div class="mb-3">
                                     <label for="emp-id" class="form-label">Text</label>
                                     <input class="form-control" name="emp_id" type="text"
-                                        value="{{ $data == null ? $data->getMeta('emp_id') : '' }}" id="emp-id">
+                                        value="{{ $data != null ? $data->getMeta('emp_id') : '' }}" id="emp-id">
                                 </div>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
@@ -32,12 +32,12 @@
                                 <div class="mb-3">
                                     <label for="example-email-input" class="form-label">Contact Number</label>
                                     <input class="form-control" type="tel"
-                                        value="{{ $data == null ? $data->getMeta('phone') : '' }}" id="example-email-input">
+                                        value="{{ $data != null ? $data->getMeta('phone') : '' }}" id="example-email-input">
                                 </div>
                                 <div class="mb-3">
                                     <label for="doj" class="form-label">Date of Joining</label>
                                     <input class="form-control" type="date"
-                                        value="{{ $data == null ? $data->getMeta('date_of_join') : '' }}" id="doj">
+                                        value="{{ $data != null ? $data->getMeta('date_of_join') : '' }}" id="doj">
                                 </div>
                                 <div class="mb-3">
                                     <label for="gender" class="form-label">Telephone</label>
