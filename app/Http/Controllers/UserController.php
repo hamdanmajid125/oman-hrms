@@ -23,7 +23,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $data = null;
+        return view('users.create',compact('data'));
     }
 
     /**

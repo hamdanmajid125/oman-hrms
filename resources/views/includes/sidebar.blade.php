@@ -33,21 +33,22 @@
                             </a>
                         </li>
 
-               
+
                         <li>
                             <a href="javascript: void(0);" class="has-arrow">
                                 <span data-key="t-contacts">Employee</span>
                             </a>
                             <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="apps-contacts-grid.html" data-key="t-user-grid">Create Employee</a></li>
+                                <li><a href="{{ route('user.create') }}" data-key="t-user-grid">Create Employee</a>
+                                </li>
                                 <li><a href="apps-contacts-list.html" data-key="t-user-list">List of Employees</a></li>
                             </ul>
                         </li>
-                     
+
                     </ul>
                 </li>
 
-               
+
 
             </ul>
 
