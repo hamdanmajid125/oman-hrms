@@ -3,7 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    UserController
+    UserController,
+    PermissionsController
 };
 
 /*
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('/', UserController::class);
         
     });
+    Route::resource('permissions', PermissionsController::class);
     
 });
 

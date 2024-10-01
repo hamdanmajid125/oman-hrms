@@ -22,7 +22,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="apps-calendar.html">
+                            <a href="{{ route('permissions.index') }}">
                                 <span data-key="t-calendar">Roles & Permission</span>
                             </a>
                         </li>
