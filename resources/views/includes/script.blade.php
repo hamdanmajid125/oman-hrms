@@ -17,6 +17,35 @@
        <script src="{{ asset('js/jquery-jvectormap-1.2.2.min.js') }}"></script>
        <script src="{{ asset('js/jquery-jvectormap-world-mill-en.js') }}"></script>
        <!-- dashboard init -->
-       <script src="{{ asset('js/dashboard.init.js') }}"></script>
+
 
        <script src="{{ asset('js/app.js') }}"></script>
+       <script src="{{ asset('js/sweetalert2.min.js') }}"></script>
+
+
+
+
+       <script>
+           @if (\Session::has('success'))
+               Swal.fire({
+                   title: "SUCCESS",
+                   text: "{{ Session::get('success') }}",
+                   icon: "success",
+                   showCancelButton: 0,
+                   confirmButtonColor: "#5156be",
+                   cancelButtonColor: "#fd625e"
+               })
+           @endif
+           @if (\Session::has('error'))
+           Swal.fire({
+                   title: "ERROR",
+                   text: "{{ Session::get('error') }}",
+                   icon: "error",
+                   showCancelButton: 0,
+                   confirmButtonColor: "#5156be",
+                   cancelButtonColor: "#fd625e"
+               })
+           @endif
+       </script>
+
+       <script src="{{ asset('js/script.js') }}"></script>

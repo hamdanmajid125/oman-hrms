@@ -9,7 +9,9 @@
                 </div>
                 <div class="card-body p-4">
 
-                    <form action="{{ $data == null ? route('user.store') : route('user.update') }}">
+                    <form action="{{ $data == null ? route('users.store') : route('users.update',$data->id) }}" method="POST">
+                        @csrf
+                        {{ $data != null ? method_field('PUT') : '' }}
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="mb-3">
@@ -22,14 +24,14 @@
                                 <div class="mb-3">
                                     <label for="emp-id" class="form-label">Employee ID</label>
                                     <input class="form-control" name="emp_id" type="text"
-                                        value="{{ $data != null ? $data->getMeta('emp_id') : '' }}" id="emp-id">
+                                        value="{{ $data != null ? $data->getMeta('employee_id') : '' }}" id="emp-id">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
                                     <input class="form-control" type="email"
-                                        value="{{ $data == null ? old('name') : $data->name }}" id="email">
+                                        value="{{ $data == null ? old('name') : $data->email }}" id="email" name="email">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -42,14 +44,14 @@
                                 <div class="mb-3">
                                     <label for="example-email-input" class="form-label">Contact Number</label>
                                     <input class="form-control" type="tel"
-                                        value="{{ $data != null ? $data->getMeta('phone') : '' }}" id="example-email-input">
+                                        value="{{ $data != null ? $data->getMeta('phone') : '' }}" id="example-email-input" name="phone">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label for="doj" class="form-label">Date of Joining</label>
                                     <input class="form-control" type="date"
-                                        value="{{ $data != null ? $data->getMeta('date_of_join') : '' }}" id="doj">
+                                        value="{{ $data != null ? $data->getMeta('date_of_join') : '' }}" id="doj" name="doj">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -67,6 +69,9 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="text-center">
+                        <button type="submit" class="btn btn-primary">{{ $data == null ? 'Create' : 'Update' }} Employee</button>
+                    </div>
                     </form>
 
                 </div>

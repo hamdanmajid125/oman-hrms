@@ -1,15 +1,14 @@
 @extends('layouts.dashboard')
+
 @section('page_content')
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0 font-size-18">Roles & Permissions</h4>
+                <h4 class="mb-sm-0 font-size-18">Permissions</h4>
 
                 <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Users</a></li>
-                        <li class="breadcrumb-item active">Roles & Permissions</li>
-                    </ol>
+                    <a href="{{ route('permissions.create') }}"
+                        class="btn btn-md btn-primary btn-rounded waves-effect waves-light">Create {{ $title }}</a>
                 </div>
 
             </div>
@@ -20,13 +19,13 @@
             <div class="card">
                 <div class="card-body">
 
-                    <table class="table table-bordered dt-responsive  nowrap w-100 datatable">
+                    <table class="datatable table table-bordered dt-responsive  nowrap w-100 datatable"
+                        data-get='{{ route('permission.get') }}' data-filter='[{"data": "id", "title": "ID"},{"data": "name", "title": "Name"},{"data": "action", "title": "Action"}]'>
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Name</th>
-                                <th>Permissions</th>
                                 <th>Action</th>
-                                
                             </tr>
                         </thead>
 
@@ -39,3 +38,13 @@
         </div>
     </div>
 @endsection
+
+
+
+@push('post-css')
+    @include('includes.datatable.css')
+@endpush
+
+@push('post-js')
+    @include('includes.datatable.script')
+@endpush

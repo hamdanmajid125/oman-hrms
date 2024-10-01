@@ -6,6 +6,18 @@
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0 font-size-18">Dashboard</h4>
+                @if($attendance && $attendance->timeout == null)
+                    <form action="{{ route('attendance.timeOut', $attendance->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Check out</button>
+                    </form>
+                @else
+                    <form action="{{ route('attendance.timeIn') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-success">Check in</button>
+                    </form>
+                @endif
+
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
@@ -13,6 +25,7 @@
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
                 </div>
+
 
             </div>
         </div>

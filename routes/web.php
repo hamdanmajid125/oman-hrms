@@ -4,7 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     UserController,
-    PermissionsController
+    PermissionsController,
+    RolesController,
+    AttendanceController
 };
 
 /*
@@ -23,23 +25,27 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    $attendance = App\Models\Attendance::where('user_id', auth()->id())->first();
+    return view('dashboard', compact('attendance'));   
+    })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('users', UserController::class);
 
-
-    Route::group(['prefix' => 'users', 'as' => 'user.'], function () {
-        Route::resource('/', UserController::class);
-        
-    });
     Route::resource('permissions', PermissionsController::class);
-    
-});
+    Route::post('get-permission', [PermissionsController::class, 'getPermissions'])->name('permission.get');
 
+    Route::resource('roles', RolesController::class);
+    Route::post('get-roles', [RolesController::class, 'getRoles'])->name('role.get');
+});
+Route::group(['middleware' => ['auth'], 'prefix' => 'attendance','as'=>'attendance.'], function (){
+    Route::get('/',[AttendanceController::class,'index'])->name('attendance');
+    Route::post('/timein', [AttendanceController::class, 'timeIn'])->name('timeIn');
+    Route::post('/timeout/{id}', [AttendanceController::class, 'timeOut'])->name('timeOut');
+});
 
 
 require __DIR__.'/auth.php';

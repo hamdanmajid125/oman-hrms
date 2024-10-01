@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Hash;
 
 class UserController extends Controller
 {
-    /**
+    /**{{  }}
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return view('users.index');
+        $data = User::all();
+        return view('users.index',compact('data'));
     }
 
     /**
@@ -35,7 +38,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
+        $user->setMeta('employee_id',$request->input('emp_id'));
+        $user->setMeta('date_of_join',$request->input('doj'));
+        $user->setMeta('phone',$request->input('phone'));
+        $user->setMeta('gender',$request->input('gender'));
+        return redirect()->route('users.index')->with('success','Employee Created Successfully');
     }
 
     /**
@@ -46,7 +64,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+       
     }
 
     /**
@@ -57,7 +75,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = User::findOrFail($id);
+        return view('users.create',compact('data'));
     }
 
     /**
@@ -69,7 +88,22 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
+        $user = User::find($id);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
+        $user->setMeta('employee_id',$request->input('emp_id'));
+        $user->setMeta('date_of_join',$request->input('doj'));
+        $user->setMeta('phone',$request->input('phone'));
+        $user->setMeta('gender',$request->input('gender'));
+        return redirect()->route('users.index')->with('success','Employee Updated Successfully');
     }
 
     /**
@@ -78,8 +112,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $user = User::findOrFail($request->id);
+        $user->delete();
+        return redirect()->route('users.index')->with('success','Employee Deleted Successfully');
     }
 }

@@ -9,7 +9,7 @@
                 <li class="menu-title" data-key="t-menu">Menu</li>
 
                 <li>
-                    <a href="index.html">
+                    <a href="{{ route('dashboard') }}">
                         <i data-feather="home"></i>
                         <span data-key="t-dashboard">Dashboard</span>
                     </a>
@@ -22,8 +22,13 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
+                            <a href="{{ route('roles.index') }}">
+                                <span data-key="t-calendar">Roles</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('permissions.index') }}">
-                                <span data-key="t-calendar">Roles & Permission</span>
+                                <span data-key="t-calendar">Permissions</span>
                             </a>
                         </li>
 
@@ -35,14 +40,9 @@
 
 
                         <li>
-                            <a href="javascript: void(0);" class="has-arrow">
-                                <span data-key="t-contacts">Employee</span>
+                            <a href="{{ route('users.index') }}">
+                                <span data-key="t-user">Employees</span>
                             </a>
-                            <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="{{ route('user.create') }}" data-key="t-user-grid">Create Employee</a>
-                                </li>
-                                <li><a href="apps-contacts-list.html" data-key="t-user-list">List of Employees</a></li>
-                            </ul>
                         </li>
 
                     </ul>
