@@ -7,15 +7,44 @@
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                 <h4 class="mb-sm-0 font-size-18">Dashboard</h4>
                 @if($attendance && $attendance->timeout == null)
+                @php
+                    $timeIn = \Carbon\Carbon::createFromTimestamp($attendance->timein);
+                    $currentTime = \Carbon\Carbon::now();
+                    $hoursWorked = $currentTime->diffInHours($timeIn);
+                @endphp
+
+                @if($hoursWorked >= 9)
                     <form action="{{ route('attendance.timeOut', $attendance->id) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-danger">Check out</button>
                     </form>
                 @else
+                    <p>You have worked <span id="timer">00:00:00</span> so far.</p>
+                    <form action="{{ route('attendance.timeOut', $attendance->id) }}" method="POST" id="checkoutForm">
+                        @csrf
+                        <button type="submit" id="checkoutButton" class="btn btn-warning">Check out early</button>
+                    </form>
+                @endif
+                @elseif($attendance && $attendance->timeout != null)
+                @php
+                    $workingHours = gmdate('H:i:s',$attendance->totalhours);
+                @endphp
+                    <p>Your working hours are {{ $workingHours }}</p>
+                @else
+                    @php
+                        $lastCheckOut = \Carbon\Carbon::createFromTimestamp($attendance->timeout ?? 0);
+                        $nextCheckInAllowed = $lastCheckOut->addDay()->startOfDay();
+                        $canCheckIn = \Carbon\Carbon::now()->greaterThanOrEqualTo($nextCheckInAllowed);
+                    @endphp
+
+                @if($canCheckIn)
                     <form action="{{ route('attendance.timeIn') }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-success">Check in</button>
                     </form>
+                @else
+                    <p>You can check in again after {{ $nextCheckInAllowed->format('Y-m-d H:i:s') }}.</p>
+                @endif
                 @endif
 
 
@@ -1601,3 +1630,51 @@
         <!-- end col -->
     </div><!-- end row -->
 @endsection
+
+@push('js')
+<script>
+    const nineHoursInSeconds = 9 * 60 * 60;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secondsLeft = seconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
+    }
+
+    function updateTimer() {
+    elapsedTime++;
+    document.getElementById('timer').textContent = formatTime(elapsedTime);
+
+    if (elapsedTime >= nineHoursInSeconds) {
+    const checkoutButton = document.getElementById('checkoutButton');
+    checkoutButton.classList.remove('btn-warning');
+    checkoutButton.classList.add('btn-danger');
+    checkoutButton.textContent = 'Check out';
+    }
+    }
+
+    function startTimer() {
+    timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function stopTimer() {
+    clearInterval(timerInterval);
+    }
+
+    document.getElementById('timer').textContent = formatTime(elapsedTime);
+    startTimer();
+
+    window.addEventListener('beforeunload', () => {
+    localStorage.setItem('elapsedTime', elapsedTime);
+    });
+
+    document.getElementById('checkoutForm').addEventListener('submit', () => {
+    stopTimer();
+    localStorage.removeItem('elapsedTime');
+    });
+</script>
+    
+@endpush
