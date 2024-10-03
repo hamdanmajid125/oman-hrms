@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\{User, Department, Team};
+use Spatie\Permission\Models\Role;
+
 use Hash;
 
 class UserController extends Controller
@@ -16,6 +18,7 @@ class UserController extends Controller
     public function index()
     {
         $data = User::all();
+       
         return view('users.index',compact('data'));
     }
 
@@ -27,7 +30,11 @@ class UserController extends Controller
     public function create()
     {
         $data = null;
-        return view('users.create',compact('data'));
+        $dept = Department::all();
+        $users = User::all();
+        $roles = Role::all();
+        $team = Team::all();
+        return view('users.create',compact('data','dept','roles','users','team'));
     }
 
     /**

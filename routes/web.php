@@ -9,6 +9,16 @@ use App\Http\Controllers\{
     AttendanceController
 };
 
+
+// use App\Models\Department;
+// Route::get('create-dept', function(){
+//     Department::create([
+//         'name' => 'Production',
+//         'desc' => 'test'
+//     ]);
+// });
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,7 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('users', UserController::class);
-    Route::delete('/save-employee', [UserController::class, 'saveEmployeeForm'])->name('user.save.form');
+    Route::post('/save-employee', [UserController::class, 'saveEmployeeForm'])->name('user.save.form');
 
     Route::resource('permissions', PermissionsController::class);
     Route::post('get-permission', [PermissionsController::class, 'getPermissions'])->name('permission.get');
