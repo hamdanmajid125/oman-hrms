@@ -64,7 +64,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-       
+
     }
 
     /**
@@ -117,5 +117,10 @@ class UserController extends Controller
         $user = User::findOrFail($request->id);
         $user->delete();
         return redirect()->route('users.index')->with('success','Employee Deleted Successfully');
+    }
+
+    public function saveEmployeeForm(Request $request)
+    {
+        dd($request->all());
     }
 }

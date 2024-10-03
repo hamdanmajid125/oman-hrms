@@ -2,156 +2,230 @@
 @section('page_content')
     <div class="row">
         <div class="col-12">
-        
+
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">Employee Form</h4>
 
                 </div>
-                <div class="card-body p-4">
-                 <ul class="nav nav-pills nav-justified" role="tablist">
-                                            <li class="nav-item waves-effect waves-light">
-                                                <a class="nav-link active" data-bs-toggle="tab" href="#home-1" role="tab">
-                                                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
-                                                    <span class="d-none d-sm-block">Home</span> 
-                                                </a>
-                                            </li>
-                                            <li class="nav-item waves-effect waves-light">
-                                                <a class="nav-link" data-bs-toggle="tab" href="#profile-1" role="tab">
-                                                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
-                                                    <span class="d-none d-sm-block">Profile</span> 
-                                                </a>
-                                            </li>
-                                            <li class="nav-item waves-effect waves-light">
-                                                <a class="nav-link" data-bs-toggle="tab" href="#messages-1" role="tab">
-                                                    <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
-                                                    <span class="d-none d-sm-block">Messages</span>   
-                                                </a>
-                                            </li>
-                                            <li class="nav-item waves-effect waves-light">
-                                                <a class="nav-link" data-bs-toggle="tab" href="#settings-1" role="tab">
-                                                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
-                                                    <span class="d-none d-sm-block">Settings</span>    
-                                                </a>
-                                            </li>
-                                        </ul>
-        
-                                        <!-- Tab panes -->
-                                        <div class="tab-content p-3 text-muted">
-                                            <div class="tab-pane active" id="home-1" role="tabpanel">
-                                                <p class="mb-0">
-                                                    Raw denim you probably haven't heard of them jean shorts Austin.
-                                                    Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache
-                                                    cliche tempor, williamsburg carles vegan helvetica. Reprehenderit
-                                                    butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi,
-                                                    qui irure terry richardson ex squid. Aliquip placeat salvia cillum
-                                                    iphone. Seitan aliquip quis cardigan american apparel, butcher
-                                                    voluptate nisi qui.
-                                                </p>
-                                            </div>
-                                            <div class="tab-pane" id="profile-1" role="tabpanel">
-                                                <p class="mb-0">
-                                                    Food truck fixie locavore, accusamus mcsweeney's marfa nulla
-                                                    single-origin coffee squid. Exercitation +1 labore velit, blog
-                                                    sartorial PBR leggings next level wes anderson artisan four loko
-                                                    farm-to-table craft beer twee. Qui photo booth letterpress,
-                                                    commodo enim craft beer mlkshk aliquip jean shorts ullamco ad
-                                                    vinyl cillum PBR. Homo nostrud organic, assumenda labore
-                                                    aesthetic magna 8-bit.
-                                                </p>
-                                            </div>
-                                            <div class="tab-pane" id="messages-1" role="tabpanel">
-                                                <p class="mb-0">
-                                                    Etsy mixtape wayfarers, ethical wes anderson tofu before they
-                                                    sold out mcsweeney's organic lomo retro fanny pack lo-fi
-                                                    farm-to-table readymade. Messenger bag gentrify pitchfork
-                                                    tattooed craft beer, iphone skateboard locavore carles etsy
-                                                    salvia banksy hoodie helvetica. DIY synth PBR banksy irony.
-                                                    Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh
-                                                    mi whatever gluten-free.
-                                                </p>
-                                            </div>
-                                            <div class="tab-pane" id="settings-1" role="tabpanel">
-                                                <p class="mb-0">
-                                                    Trust fund seitan letterpress, keytar raw denim keffiyeh etsy
-                                                    art party before they sold out master cleanse gluten-free squid
-                                                    scenester freegan cosby sweater. Fanny pack portland seitan DIY,
-                                                    art party locavore wolf cliche high life echo park Austin. Cred
-                                                    vinyl keffiyeh DIY salvia PBR, banh mi before they sold out
-                                                    farm-to-table.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div><!-- end card-body -->
+                <div class="card-body p-0">
+                    <ul class="nav custom-nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#overview" role="tab">
+                                <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                                <span class="d-none d-sm-block">Overview</span>
+                            </a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-bs-toggle="tab" href="#joining" role="tab">
+                                <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                                <span class="d-none d-sm-block">Joining</span>
+                            </a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-bs-toggle="tab" href="#address" role="tab">
+                                <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                <span class="d-none d-sm-block">Address & Contacts</span>
+                            </a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-bs-toggle="tab" href="#salary" role="tab">
+                                <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                                <span class="d-none d-sm-block">Salary</span>
+                            </a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-bs-toggle="tab" href="#personal" role="tab">
+                                <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                                <span class="d-none d-sm-block">Personal</span>
+                            </a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-bs-toggle="tab" href="#profile" role="tab">
+                                <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                                <span class="d-none d-sm-block">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-bs-toggle="tab" href="#exit" role="tab">
+                                <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                                <span class="d-none d-sm-block">Exit</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content p-3 text-muted">
+                        <div class="tab-pane active" id="overview" role="tabpanel">
+                            <form action="{{ route('user.save.form') }}" method="POST" id="overview-form">
+                                <div class="row">
+                                    <input type="hidden" name="save_method" value="overview">
+                                    <x-input-component :data="$data" name="name" id="name"
+                                        labelText="Employee Name" colClass="col-lg-12" />
 
-                    <form action="{{ $data == null ? route('users.store') : route('users.update',$data->id) }}" method="POST">
-                        @csrf
-                        {{ $data != null ? method_field('PUT') : '' }}
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Employee Name</label>
-                                    <input class="form-control" name="name" type="text"
-                                        value="{{ $data == null ? old('name') : $data->name }}" id="name">
+
+
+                                    <x-input-component :data="$data" name="meta[dob]" id="dob" type="date"
+                                        labelText="Date of Birth" colClass="col-lg-4" />
+
+                                    <div class="col-lg-4">
+                                        <label for="gender">Gender</label>
+                                        <select name="gender" id="gender" id="meta[gender]" class="form-control">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </div>
+                                    <x-input-component :data="$data" name="meta[salutation]" id="salutation" type="text"
+                                        labelText="Salutation" colClass="col-lg-4" />
+
                                 </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="emp-id" class="form-label">Employee ID</label>
-                                    <input class="form-control" name="emp_id" type="text"
-                                        value="{{ $data != null ? $data->getMeta('employee_id') : '' }}" id="emp-id">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input class="form-control" type="email"
-                                        value="{{ $data == null ? old('name') : $data->email }}" id="email" name="email">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="password" class="form-label">Password</label>
-                                    <input type="password" class="form-control" name="password" id="password">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="example-email-input" class="form-label">Contact Number</label>
-                                    <input class="form-control" type="tel"
-                                        value="{{ $data != null ? $data->getMeta('phone') : '' }}" id="example-email-input" name="phone">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="doj" class="form-label">Date of Joining</label>
-                                    <input class="form-control" type="date"
-                                        value="{{ $data != null ? $data->getMeta('date_of_join') : '' }}" id="doj" name="doj">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label for="gender" class="form-label">Gender</label>
-                                    <select name="gender" class="form-select">
-                                        <option value="" hidden selected>Select Gender</option>
-                                        <option value="male"
-                                            {{ $data != null && $data->getMeta('gender') == 'male' ? 'selected' : '' }}>Male
-                                        </option>
-                                        <option value="female"
-                                            {{ $data != null && $data->getMeta('gender') == 'female' ? 'selected' : '' }}>
-                                            Female</option>
-                                    </select>
-                                </div>
-                            </div>
+                            </form>
                         </div>
-                        <div class="text-center">
-                        <button type="submit" class="btn btn-primary">{{ $data == null ? 'Create' : 'Update' }} Employee</button>
-                    </div>
-                    </form>
+                        <div class="tab-pane" id="joining" role="tabpanel">
+                            <form action="{{ route('user.save.form') }}" method="POST" id="joining-form">
+                                <div class="row">
+                                    <input type="hidden" name="save_method" value="joining">
+                                    <div class="col-lg-4">
+                                        <label for="dept">Department</label>
+                                        <select name="meta[dept]" id="dept" class="form-control">
+                                            <option value="">Test</option>
+                                            <option value="">Testing</option>
+                                            <option value="">Neo</option>
+                                        </select>
+                                    </div>
 
+                                    <x-input-component :data="$data" name="meta[date_join]" id="date_join"
+                                        labelText="Date of Joining" type="date" colClass="col-lg-4" />
+
+                                    <x-input-component :data="$data" name="meta[offer_date]" id="offer_date"
+                                        labelText="Offer Date" type="date" colClass="col-lg-4" />
+
+                                    <x-input-component :data="$data" name="meta[notice_days]" id="notice_days"
+                                        labelText="Notice (days)" type="number" colClass="col-lg-4" />
+
+                                    <x-input-component :data="$data" name="meta[contract_date]" id="contract_date"
+                                        labelText="Contract End Date" type="date" colClass="col-lg-4" />
+
+
+                                    <x-input-component :data="$data" name="meta[retire_date]" id="retire_date"
+                                        labelText="Date of Retirement" type="date" colClass="col-lg-4" />
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="address" role="tabpanel">
+                            <form action="{{ route('user.save.form') }}" method="POST" id="address-form">
+                                <div class="row">
+                                    <input type="hidden" name="save_method" value="address">
+                                    <x-input-component :data="$data" name="meta[address]" id="date_join"
+                                    labelText="Address" type="address" colClass="col-lg-4" />
+
+                                    <x-input-component :data="$data" name="meta[date_join]" id="date_join"
+                                        labelText="Mobile Number" type="number" colClass="col-lg-4" />
+
+                                    <x-input-component :data="$data" name="meta[personal_email]" id="personal_email"
+                                        labelText="Personal Email" type="email" colClass="col-lg-4" />
+
+                                    <x-input-component :data="$data" name="meta[prefered_email]" id="prefered_email"
+                                        labelText="Prefered Email" type="email" colClass="col-lg-4" />
+
+                                    <x-input-component :data="$data" name="email" id="email"
+                                        labelText="Company Email" type="email" colClass="col-lg-4" />
+
+                                    <x-input-component :data="$data" name="meta[phone_number]" id="meta[phone_number]"
+                                        labelText="Emergency Phone Number" type="number" colClass="col-lg-4" />
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="salary" role="tabpanel">
+                            <form action="{{ route('user.save.form') }}" method="POST" id="salary-form">
+                                <div class="row">
+                                    <input type="hidden" name="save_method" value="salary">
+                                    <x-input-component :data="$data" name="meta[salary]" id="salary"
+                                        labelText="Salary" type="number" colClass="col-lg-4" />
+
+                                    <x-input-component :data="$data" name="meta[after_tax_salary]" id="after_tax_salary"
+                                        labelText="Salary After Tax" type="number" colClass="col-lg-4" />
+
+                                    <div class="col-lg-4">
+                                        <label for="currency">Currency</label>
+                                        <select name="meta[currency]" id="currency" class="form-control">
+                                            @foreach (currency_list() as $item)
+                                                <option {{ $item['code'] == 'USD' ? 'selected' : '' }}
+                                                    value="{{ $item['code'] }}">
+                                                    {{ $item['name'] . ' (' . $item['code'] . ')' }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="personal" role="tabpanel">
+                            <form action="{{ route('user.save.form') }}" method="POST" id="personal-form">
+                                <div class="row">
+                                    <input type="hidden" name="save_method" value="personal">
+                                    <div class="col-lg-4">
+                                        <label for="marital_status">Marital Status</label>
+                                        <select name="meta[marital_status]" id="marital_status" class="form-control">
+                                            <option value="single">Single</option>
+                                            <option value="married">Married</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label for="blood_group">Blood Group</label>
+                                        <select name="meta[blood_group]" id="blood_group" class="form-control">
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                        </select>
+                                    </div>
+                                    <x-input-component :data="$data" name="meta[place_of_birth]" id="place_of_birth"
+                                        labelText="Place Of Birth" type="text" colClass="col-lg-4" />
+
+                                    <div class="col-lg-12">
+                                        <label for="bio">Bio / Cover Letter</label>
+                                        <textarea name="meta[bio]" id="bio" class="form-control" cols="30" rows="10"></textarea>
+                                    </div>
+
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="profile" role="tabpanel">
+                            {{-- Roles Department Education and Work Experience --}}
+                        </div>
+                        <div class="tab-pane" id="exit" role="tabpanel">
+                            <form action="{{ route('user.save.form') }}" method="POST" id="exit-form">
+                                <div class="row">
+                                    <input type="hidden" name="save_method" value="exit">
+                                    <x-input-component :data="$data" name="resignation_letter_date"
+                                        id="meta[resignation_letter_date]" labelText="Resignation Letter Date" type="date"
+                                        colClass="col-lg-4" />
+                                    <x-input-component :data="$data" name="exit_interview_held_on"
+                                        id="meta[exit_interview_held_on]" labelText="Exit Interview Held On" type="date"
+                                        colClass="col-lg-4" />
+                                    <div class="col-lg-4">
+                                        <label for="leave_encashed">Leave Encashed</label>
+                                        <select name="meta[leave_encashed]" id="leave_encashed" class="form-control">
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="reason_leaving">Reason for Leaving</label>
+                                        <textarea name="meta[reason_leaving]" id="reason_leaving" class="form-control" cols="30" rows="10"></textarea>
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
+    </div>
     </div> <!-- end col -->
     </div>
 @endsection

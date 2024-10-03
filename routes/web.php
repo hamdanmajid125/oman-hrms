@@ -26,14 +26,16 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $attendance = App\Models\Attendance::where('user_id', auth()->id())->first();
-    return view('dashboard', compact('attendance'));   
+    return view('dashboard', compact('attendance'));
     })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     Route::resource('users', UserController::class);
+    Route::delete('/save-employee', [UserController::class, 'saveEmployeeForm'])->name('user.save.form');
 
     Route::resource('permissions', PermissionsController::class);
     Route::post('get-permission', [PermissionsController::class, 'getPermissions'])->name('permission.get');
