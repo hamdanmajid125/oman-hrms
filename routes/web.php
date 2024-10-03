@@ -6,7 +6,8 @@ use App\Http\Controllers\{
     UserController,
     PermissionsController,
     RolesController,
-    AttendanceController
+    AttendanceController,
+    ShiftController
 };
 
 
@@ -52,6 +53,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('roles', RolesController::class);
     Route::post('get-roles', [RolesController::class, 'getRoles'])->name('role.get');
+
+    Route::resource('shifts', ShiftController::class);
+    Route::post('get-shifts', [ShiftController::class, 'getShifts'])->name('shift.get');
 });
 Route::group(['middleware' => ['auth'], 'prefix' => 'attendance','as'=>'attendance.'], function (){
     Route::get('/{id}',[AttendanceController::class,'index'])->name('index');

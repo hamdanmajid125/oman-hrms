@@ -10,14 +10,14 @@
 
                 <li>
                     <a href="{{ route('dashboard') }}">
-                        <i data-feather="home"></i>
+                        <i class="mdi mdi-home"></i>
                         <span data-key="t-dashboard">Dashboard</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="grid"></i>
+                        <i class="fas fa-users"></i>
                         <span data-key="t-apps">Users</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -41,6 +41,23 @@
 
                     </ul>
                 </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i class="mdi mdi-clock-edit-outline"></i>
+                        <span data-key="t-apps">Shifts</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ route('shifts.create') }}">
+                                <span data-key="t-calendar">Create Shift</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('shifts.index') }}">
+                                <span data-key="t-calendar">Shift List</span>
+                            </a>
+                        </li>
+                </li>    
 
 
 
