@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Attendance;
+use App\Models\{Attendance,User};
+use Auth;
+use Carbon\Carbon;
 class AttendanceController extends Controller
 {
-    public function index()
+    public function index(Request $request, $id)
     {
-        $attendance = Attendance::where('user_id', auth()->id())->first();
-        return view('attendance.index', compact('attendance'));
+        $month = $request->input('month', Carbon::now()->month);
+        $year = $request->input('year', Carbon::now()->year);
+        $user = User::find($id);
+        $attendance = Attendance::where('user_id', $id)->get();
+        return view('attendance.index',compact('user','attendance','month','year'));
     }
-
     public function timeIn(Request $request)
     {
         $attendance = Attendance::create([
@@ -21,6 +25,7 @@ class AttendanceController extends Controller
         ]);
         return redirect()->back()->with('success', 'Checked in successfully');
     }
+    
     public function timeOut(Request $request, $id)
     {
         $attendance = Attendance::findOrFail($id);

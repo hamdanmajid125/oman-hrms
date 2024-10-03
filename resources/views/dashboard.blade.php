@@ -14,13 +14,13 @@
                 @endphp
 
                 @if($hoursWorked >= 9)
-                    <form action="{{ route('attendance.timeOut', $attendance->id) }}" method="POST">
+                    <form action="{{ route('attendance.timeOut', $attendance->id) }}" method="POST" class="checkoutForm">
                         @csrf
                         <button type="submit" class="btn btn-danger">Check out</button>
                     </form>
                 @else
                     <p>You have worked <span id="timer">00:00:00</span> so far.</p>
-                    <form action="{{ route('attendance.timeOut', $attendance->id) }}" method="POST" id="checkoutForm">
+                    <form action="{{ route('attendance.timeOut', $attendance->id) }}" method="POST" class="checkoutForm">
                         @csrf
                         <button type="submit" id="checkoutButton" class="btn btn-warning">Check out early</button>
                     </form>
@@ -38,9 +38,9 @@
                     @endphp
 
                 @if($canCheckIn)
-                    <form action="{{ route('attendance.timeIn') }}" method="POST">
+                    <form action="{{ route('attendance.timeIn') }}" method="POST" class="checkinForm">
                         @csrf
-                        <button type="submit" class="btn btn-success">Check in</button>
+                        <button type="submit" id="checkinButton" class="btn btn-success">Check in</button>
                     </form>
                 @else
                     <p>You can check in again after {{ $nextCheckInAllowed->format('Y-m-d H:i:s') }}.</p>
@@ -1632,49 +1632,50 @@
 @endsection
 
 @push('js')
+
 <script>
-    const nineHoursInSeconds = 9 * 60 * 60;
+    const nineHoursInSeconds = 9* 60 * 60;
     let elapsedTime = 0;
     let timerInterval;
 
     function formatTime(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secondsLeft = seconds % 60;
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secondsLeft = seconds % 60;
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
     }
 
     function updateTimer() {
-    elapsedTime++;
-    document.getElementById('timer').textContent = formatTime(elapsedTime);
+        elapsedTime++;
+        document.getElementById('timer').textContent = formatTime(elapsedTime);
 
-    if (elapsedTime >= nineHoursInSeconds) {
-    const checkoutButton = document.getElementById('checkoutButton');
-    checkoutButton.classList.remove('btn-warning');
-    checkoutButton.classList.add('btn-danger');
-    checkoutButton.textContent = 'Check out';
-    }
+        if (elapsedTime >= nineHoursInSeconds) {
+            const checkoutButton = document.getElementById('checkoutButton');
+            checkoutButton.classList.remove('btn-warning');
+            checkoutButton.classList.add('btn-danger');
+            checkoutButton.textContent = 'Check out';
+        }
     }
 
     function startTimer() {
-    timerInterval = setInterval(updateTimer, 1000);
+        timerInterval = setInterval(updateTimer, 1000);
     }
 
     function stopTimer() {
-    clearInterval(timerInterval);
+        clearInterval(timerInterval);
     }
 
     document.getElementById('timer').textContent = formatTime(elapsedTime);
     startTimer();
 
     window.addEventListener('beforeunload', () => {
-    localStorage.setItem('elapsedTime', elapsedTime);
+        localStorage.setItem('elapsedTime', elapsedTime);
     });
 
-    document.getElementById('checkoutForm').addEventListener('submit', () => {
-    stopTimer();
-    localStorage.removeItem('elapsedTime');
-    });
+    document.querySelector('.checkoutForm').addEventListener('submit', () => {
+        localStorage.removeItem('elapsedTime');
+        stopTimer();
+    }); 
 </script>
-    
+
 @endpush

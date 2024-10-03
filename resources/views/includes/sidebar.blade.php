@@ -32,12 +32,6 @@
                             </a>
                         </li>
 
-                        <li>
-                            <a href="apps-chat.html">
-                                <span data-key="t-chat">Attendance</span>
-                            </a>
-                        </li>
-
 
                         <li>
                             <a href="{{ route('users.index') }}">

@@ -9,7 +9,7 @@
                 </div>
                 <div class="card-body p-4">
 
-                    <form action="{{ $data == null ? route('roles.store') : route('roles.update') }}" method="POST">
+                    <form action="{{ $data == null ? route('roles.store') : route('roles.update', $data->id) }}" method="POST">
                         @csrf
                         {{ $data != null ? method_field('PUT') : '' }}
                         <div class="row">
@@ -23,11 +23,14 @@
                             <div class="col-lg-12">
                                 <div class="mb-3">
                                     <div class="row">
-                                        @forelse ($permissions as $item)
+                                        @forelse ($permissions as $key => $item)
                                             <div class="col-md-3">
                                                 <div class="form-check">
-                                                    <input type="checkbox" >
-                                                    <label for="">{{ ucwords($item->name) }}</label>
+                                                    <input class="form-check-input" name="permissions[]" type="checkbox" id="permission_{{ $key }}" {{ $data ? ($data->hasPermissionTo($item->name) ? 'checked' : '') : '' }}
+                                                        value="{{ $item->name }}" id="flexCheckDefault">
+                                                    <label class="form-check-label" for="permission_{{ $key }}">
+                                                        {{ ucwords($item->name) }}
+                                                    </label>
                                                 </div>
 
 

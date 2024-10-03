@@ -19,11 +19,12 @@
             <div class="card">
                 <div class="card-body">
 
-                    <table class="datatable table table-bordered dt-responsive  nowrap w-100"  data-get='{{ route('role.get') }}' data-filter='[{"data": "id", "title": "ID"},{"data": "name", "title": "Name"},{"data": "action", "title": "Action"}]'>
+                    <table class="datatable table table-bordered dt-responsive  nowrap w-100"  data-get='{{ route('role.get') }}' data-filter='[{"data": "id", "title": "ID"},{"data": "name", "title": "Name"},{"data": "permissions", "title": "Permissions"},{"data": "action", "title": "Action"}]'>
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
+                                <th>Permssions</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

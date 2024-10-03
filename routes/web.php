@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::post('get-roles', [RolesController::class, 'getRoles'])->name('role.get');
 });
 Route::group(['middleware' => ['auth'], 'prefix' => 'attendance','as'=>'attendance.'], function (){
-    Route::get('/',[AttendanceController::class,'index'])->name('attendance');
+    Route::get('/{id}',[AttendanceController::class,'index'])->name('index');
     Route::post('/timein', [AttendanceController::class, 'timeIn'])->name('timeIn');
     Route::post('/timeout/{id}', [AttendanceController::class, 'timeOut'])->name('timeOut');
 });
