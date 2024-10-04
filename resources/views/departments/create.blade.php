@@ -25,7 +25,7 @@
                                 <textarea name="desc" id="desc" cols="30" rows="10" class="form-control">{{ $data == null ? old('desc') : $data->desc }}</textarea>
                             </div>
                         </div>   
-                        <div class="text-center">
+                        <div class="text-center mt-2">
                             <button type="submit" class="btn btn-primary">{{ $data == null ? 'Create' : 'Update' }}
                                 Department</button>
                         </div>          

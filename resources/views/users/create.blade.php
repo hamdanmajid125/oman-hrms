@@ -309,7 +309,7 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
 
-                                        <label for="shift_id">Team <span class="text-danger">*</span></label>
+                                        <label for="shift_id">Shift <span class="text-danger">*</span></label>
                                         <select name="shift_id" class="form-control" id="shift_id" required>
                                             <option hidden value="">Select Shift Timings</option>
                                             @foreach ($shifts as $item)
