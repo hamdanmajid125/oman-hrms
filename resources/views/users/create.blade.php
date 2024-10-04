@@ -472,19 +472,16 @@
                                             </div>
                                         </div>
 
-                                        <button data-repeater-create class="btn btn-primary mt-4 mb-4" type="button">Add More</button>
+                                        <button data-repeater-create class="btn btn-primary mt-4 mb-4" type="button">Add
+                                            More</button>
                                     </div>
 
                                 </div>
                                 <div class="col-md-12">
                                     <h6>Essentials Documents</h6>
                                     <hr>
-                                    <div class="card-body">
-                                        <h4 class="card-title mb-3">Update Files</h4>
-                                        <div class="separator-breadcrumb border-top mb-3"></div>
-                                        <input id="image-file" type="file" name="images[]" multiple
-                                            data-browse-on-zone-click="true">
-                                    </div>
+                                    <input type="file" class="filepond" name="filepond" multiple
+                                        data-allow-reorder="true"  data-max-files="3">
 
                                 </div>
 
@@ -537,12 +534,36 @@
 @endsection
 @push('css')
     <link rel="stylesheet" href="{{ asset('js/select2.min.css') }}">
+    <link href="https://unpkg.com/filepond@4.31.4/dist/filepond.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css" rel="stylesheet">
 @endpush
 
 @push('post-js')
+    @foreach (['https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js', 'https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js', 'https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.min.js', 'https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js', 'https://unpkg.com/filepond/dist/filepond.min.js'] as $item)
+        <script src="{{ $item }}"></script>
+    @endforeach
     <script src="https://cdn.jsdelivr.net/npm/jquery.repeater@1.2.1/jquery.repeater.min.js"></script>
 
     <script>
+        FilePond.registerPlugin(
+
+            // encodes the file as base64 data
+            FilePondPluginFileEncode,
+
+            // validates the size of the file
+            FilePondPluginFileValidateSize,
+
+            // corrects mobile image orientation
+            FilePondPluginImageExifOrientation,
+
+            // previews dropped images
+            FilePondPluginImagePreview
+        );
+
+        // Select the file input and use create() to turn it into a pond
+        FilePond.create(
+            document.querySelector('input.filepond')
+        );
         let count = {{ $count ?? 0 }};
         $('.repeater').repeater({
             initEmpty: false,
