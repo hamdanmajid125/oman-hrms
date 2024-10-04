@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UserController::class);
     Route::post('/save-employee', [UserController::class, 'saveEmployeeForm'])->name('user.save.form');
+    Route::post('/user-delete-repeater', [UserController::class, 'deleteRepeater'])->name('user.delete.repeater');
 
     Route::resource('permissions', PermissionsController::class);
     Route::post('get-permission', [PermissionsController::class, 'getPermissions'])->name('permission.get');
@@ -69,7 +70,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('leavetypes', LeaveTypeController::class);
     Route::post('get-leavetypes', [LeaveTypeController::class, 'getLeaveTypes'])->name('leavetype.get');
-   
+
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'leaves','as'=>'leaves.'], function (){

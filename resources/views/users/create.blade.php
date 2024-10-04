@@ -347,56 +347,59 @@
                                     @if ($data)
                                         @if ($data->getMeta('education'))
                                             @php
+                                                // Initialize the counter to the number of existing education entries.
                                                 $count = 0;
                                             @endphp
                                             @foreach (json_decode($data->getMeta('education'), true) as $item)
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <label for="">Level</label>
-                                                        <input name="preeducation[{{ $count }}][level]"
-                                                            type="text" value="{{ $item['level'] }}"
-                                                            class="form-control">
+                                                        <input type="text" value="{{ $item['level'] }}"
+                                                            class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label for="">Institute</label>
-                                                        <input type="text"
-                                                            name="preeducation[{{ $count }}][institue]"
-                                                            value="{{ $item['institue'] }}" class="form-control">
+                                                        <input type="text" value="{{ $item['institute'] }}"
+                                                            class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label for="">Grade/CGPA</label>
-                                                        <input type="text"
-                                                            name="preeducation[{{ $count }}][grade]"
-                                                            name="grade" value="{{ $item['grade'] }}"
-                                                            class="form-control">
+                                                        <input type="text" value="{{ $item['grade'] }}"
+                                                            class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-1">
                                                         <button class="btn btn-danger mt-4"
-                                                            onclick="deleteForm(this.parentElement.parentElement)"
+                                                            onclick="deleteForm(this.parentElement.parentElement,{{ json_encode($item) }},{{ $data->id }},'education')"
                                                             type="button">Delete</button>
                                                     </div>
                                                 </div>
                                                 @php
+                                                    // Increment the counter for the next entry.
                                                     $count++;
                                                 @endphp
                                             @endforeach
                                         @endif
                                     @endif
+
+                                    <!-- Repeater Section -->
                                     <div class="repeater">
                                         <div data-repeater-list="education">
                                             <div data-repeater-item>
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <label for="">Level</label>
-                                                        <input type="text" name="level" class="form-control">
+                                                        <input type="text" name="level" class="form-control"
+                                                            required>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label for="">Institute</label>
-                                                        <input type="text" name="institue" class="form-control">
+                                                        <input type="text" name="institute" class="form-control"
+                                                            required>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label for="">Grade/CGPA</label>
-                                                        <input type="text" name="grade" class="form-control">
+                                                        <input type="text" name="grade" class="form-control"
+                                                            required>
                                                     </div>
                                                     <div class="col-md-1">
                                                         <button data-repeater-delete class="btn btn-danger mt-4"
@@ -406,7 +409,8 @@
                                             </div>
                                         </div>
 
-                                        <button data-repeater-create class="btn btn-primary mt-4" type="button">Add
+                                        <!-- Button to add more items to the repeater -->
+                                        <button data-repeater-create class="btn btn-primary mt-4 mb-4" type="button">Add
                                             More</button>
                                     </div>
 
@@ -421,40 +425,44 @@
                                                     <div class="col-md-4">
                                                         <label for="">Company</label>
                                                         <input type="text" value="{{ $item['company'] }}"
-                                                            class="form-control">
+                                                            class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label for="">Position</label>
                                                         <input type="text" value="{{ $item['position'] }}"
-                                                            class="form-control">
+                                                            class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label for="">Year</label>
                                                         <input type="text" value="{{ $item['year'] }}"
-                                                            class="form-control">
+                                                            class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-danger mt-4" type="button">Remove</button>
+                                                        <button class="btn btn-danger mt-4" type="button">Remove</button
+                                                            onclick="deleteForm(this.parentElement.parentElement,{{ json_encode($item) }},{{ $data->id }},'work_experience')">
                                                     </div>
                                                 </div>
                                             @endforeach
                                         @endif
                                     @endif
                                     <div class="repeater">
-                                        <div data-repeater-list="education">
+                                        <div data-repeater-list="work_experience">
                                             <div data-repeater-item>
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <label for="">Level</label>
-                                                        <input type="text" name="level" class="form-control">
+                                                        <label for="">Company</label>
+                                                        <input type="text" name="company" class="form-control"
+                                                            required>
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <label for="">Institute</label>
-                                                        <input type="text" name="institue" class="form-control">
+                                                        <label for="">Position</label>
+                                                        <input type="text" name="position" class="form-control"
+                                                            required>
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <label for="">Grade/CGPA</label>
-                                                        <input type="text" name="grade" class="form-control">
+                                                        <label for="">Year</label>
+                                                        <input type="text" name="year" class="form-control"
+                                                            required>
                                                     </div>
                                                     <div class="col-md-1">
                                                         <button data-repeater-delete class="btn btn-danger mt-4"
@@ -464,8 +472,18 @@
                                             </div>
                                         </div>
 
-                                        <button data-repeater-create class="btn btn-primary mt-4" type="button">Add
-                                            More</button>
+                                        <button data-repeater-create class="btn btn-primary mt-4 mb-4" type="button">Add More</button>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <h6>Essentials Documents</h6>
+                                    <hr>
+                                    <div class="card-body">
+                                        <h4 class="card-title mb-3">Update Files</h4>
+                                        <div class="separator-breadcrumb border-top mb-3"></div>
+                                        <input id="image-file" type="file" name="images[]" multiple
+                                            data-browse-on-zone-click="true">
                                     </div>
 
                                 </div>
@@ -525,11 +543,13 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery.repeater@1.2.1/jquery.repeater.min.js"></script>
 
     <script>
+        let count = {{ $count ?? 0 }};
         $('.repeater').repeater({
             initEmpty: false,
+
             defaultValues: {
                 'level': '',
-                'institue': '',
+                'institute': '', // Consider correcting 'institue' to 'institute' to avoid future issues
                 'grade': ''
             },
             show: function() {
@@ -540,8 +560,29 @@
             }
         });
 
-        function deleteForm(elem) {
-            elem.remove()
+        function deleteForm(elem, item, id, key) {
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('user.delete.repeater') }}",
+                data: {
+                    id: id,
+                    value: item,
+                    key: key
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.status) {
+                        toastr.error('Deleted Value');
+
+                        elem.remove();
+                    }
+                },
+                error: function(response) {
+                    toastr.error('An error occurred. Please try again.');
+                }
+            });
         }
 
 
@@ -591,7 +632,6 @@
                 data['id'] = $('#id').val()
 
             }
-
             $.ajax({
                 type: 'POST',
                 url: "{{ route('user.save.form') }}",

@@ -18,7 +18,7 @@ class UserController extends Controller
     public function index()
     {
         $data = User::all();
-       
+
         return view('users.index',compact('data'));
     }
 
@@ -61,7 +61,7 @@ class UserController extends Controller
         $user->setMeta('date_of_join',$request->input('doj'));
         $user->setMeta('phone',$request->input('phone'));
         $user->setMeta('gender',$request->input('gender'));
-       
+
         return redirect()->route('users.index')->with('success','Employee Created Successfully');
     }
 
@@ -73,6 +73,20 @@ class UserController extends Controller
      */
     public function show($id)
     {
+
+    }
+
+    public function deleteRepeater(Request $request)
+    {
+        $user = User::find($request->id);
+        $education = json_decode($user->getMeta($request->key),true);
+        foreach ($education as $key => $subArray) {
+            if ($subArray == $request->input('value')) {
+                unset($education[$key]);
+            }
+        }
+        $user->setMeta($request->key,json_encode($education));
+        return response()->json(['status'=>true]);
 
     }
 
@@ -135,7 +149,6 @@ class UserController extends Controller
 
     public function saveEmployeeForm(Request $request)
     {
-        dump($request->all());
         $user = $request->has('id') ? User::find($request->id) : new User;
         $user->name = $request->name;
         $user->department_id = $request->department_id;
@@ -150,27 +163,32 @@ class UserController extends Controller
            $user->setMeta($key,$value);
         }
         if ($request->has('education')) {
-            $hasNull = false; 
+            $hasNull = false;
             $education_array = [];
             foreach ($request->input('education') as $education) {
-                if (is_null($education['level']) || is_null($education['institue']) || is_null($education['grade'])) {
+                if (is_null($education['level']) || is_null($education['institute']) || is_null($education['grade'])) {
                     $hasNull = true;
                     break;
                 }
             }
             if (!$hasNull) {
-                array_push($education_array,json_encode($request->input('education')));
+                $user->setMeta('education',json_encode($request->input('education')));
             }
-            foreach ($request->input('preeducation') as $education) {
-                if (is_null($education['level']) || is_null($education['institue']) || is_null($education['grade'])) {
+
+        }
+        if ($request->has('work_experience')) {
+            $hasNull = false;
+            $education_array = [];
+            foreach ($request->input('work_experience') as $education) {
+                if (is_null($education['company']) || is_null($education['position']) || is_null($education['year'])) {
                     $hasNull = true;
                     break;
                 }
             }
             if (!$hasNull) {
-                array_push($education_array,json_encode($request->input('education')));
+                $user->setMeta('work_experience',json_encode($request->input('work_experience')));
             }
-            dd($education_array);
+
         }
         if ($request->has('roles')) {
             $user->syncRoles($request->roles);
