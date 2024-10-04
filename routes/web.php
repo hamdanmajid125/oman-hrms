@@ -7,7 +7,11 @@ use App\Http\Controllers\{
     PermissionsController,
     RolesController,
     AttendanceController,
-    ShiftController
+    ShiftController,
+    DepartmentController,
+    HolidayController,
+    LeaveTypeController,
+    LeaveController
 };
 
 
@@ -56,7 +60,22 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('shifts', ShiftController::class);
     Route::post('get-shifts', [ShiftController::class, 'getShifts'])->name('shift.get');
+
+    Route::resource('departments', DepartmentController::class);
+    Route::post('get-departments', [DepartmentController::class, 'getDepartments'])->name('department.get');
+
+    Route::resource('holidays', HolidayController::class);
+    Route::post('get-holidays', [HolidayController::class, 'getHolidays'])->name('holiday.get');
+
+    Route::resource('leavetypes', LeaveTypeController::class);
+    Route::post('get-leavetypes', [LeaveTypeController::class, 'getLeaveTypes'])->name('leavetype.get');
+   
 });
+
+Route::group(['middleware' => ['auth'], 'prefix' => 'leaves','as'=>'leaves.'], function (){
+    Route::get('all-leaves',[LeaveController::class,'allLeaves'])->name('allLeaves');
+});
+
 Route::group(['middleware' => ['auth'], 'prefix' => 'attendance','as'=>'attendance.'], function (){
     Route::get('/{id}',[AttendanceController::class,'index'])->name('index');
     Route::post('/timein', [AttendanceController::class, 'timeIn'])->name('timeIn');

@@ -10,7 +10,8 @@
             <div class="card-body p-4">
 
                 <form action="{{ $data == null ? route('shifts.store') : route('shifts.update',$data->id) }}" method="POST">
-                    <input type="hidden" name="_token" value="OhVHmiW7lb7mkOzEFoxqLYBnsebg8qmTsz3XHfsp">                        
+                    @csrf
+                    {{ $data != null ? method_field('PUT') : '' }}                        
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="mb-3">

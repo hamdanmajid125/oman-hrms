@@ -39,6 +39,12 @@
                             </a>
                         </li>
 
+                        <li>
+                            <a href="{{ route('leaves.allLeaves') }}">
+                                <span data-key="t-user">Leave Request</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
                 <li>
@@ -48,18 +54,54 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="{{ route('shifts.create') }}">
-                                <span data-key="t-calendar">Create Shift</span>
-                            </a>
-                        </li>
-                        <li>
                             <a href="{{ route('shifts.index') }}">
                                 <span data-key="t-calendar">Shift List</span>
                             </a>
                         </li>
-                </li>    
+                    </ul>
+                </li>
+                
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i class="mdi mdi-office-building-outline"></i>
+                        <span data-key="t-apps">Departments</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ route('departments.index') }}">
+                                <span data-key="t-calendar">Department List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i class="mdi mdi-calendar"></i>
+                        <span data-key="t-apps">Holiday</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ route('holidays.index') }}">
+                                <span data-key="t-calendar">Holiday List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i class="mdi mdi-calendar-month-outline"></i>
+                        <span data-key="t-apps">Leave Type</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ route('leavetypes.index') }}">
+                                <span data-key="t-calendar">Leave Type List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
             </ul>
 

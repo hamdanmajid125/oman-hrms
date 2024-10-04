@@ -18,8 +18,7 @@ class ShiftController extends Controller
      */
     public function index()
     {
-        $data = Shift::all();
-        return view('shifts.index',compact('data'));
+        return view('shifts.index');
     }
 
     public function getShifts(Request $request)

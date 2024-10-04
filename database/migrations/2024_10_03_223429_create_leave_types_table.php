@@ -13,18 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('shifts')) {
-            Schema::create('shifts', function (Blueprint $table) {
+        if (!Schema::hasTable('leave_types')) {
+            Schema::create('leave_types', function (Blueprint $table) {
                 $table->id();
                 $table->string('name')->nullable();
-                $table->string('starting_time')->nullable();
-                $table->string('ending_time')->nullable();
-                $table->string('timing')->nullable();
-                $table->decimal('grace_time',10,2)->default(20);
-                $table->string('shift_hours')->nullable();
+                $table->string('days')->nullable();
                 $table->timestamps();
             });
-        } 
+        }
     }
 
     /**
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shifts');
+        Schema::dropIfExists('leave_types');
     }
 };
