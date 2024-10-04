@@ -103,6 +103,34 @@
                     </ul>
                 </li>
 
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i class="mdi mdi-microsoft-teams"></i>
+                        <span data-key="t-apps">Teams</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ route('teams.index') }}">
+                                <span data-key="t-calendar">Teams List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i class="mdi mdi-cash-minus"></i>
+                        <span data-key="t-apps">Tax</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ route('taxes.index') }}">
+                                <span data-key="t-calendar">Tax List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
             </ul>
 
             <div class="card sidebar-alert border-0 text-center mx-4 mb-0 mt-5">

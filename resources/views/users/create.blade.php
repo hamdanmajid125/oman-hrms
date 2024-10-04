@@ -309,7 +309,7 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
 
-                                        <label for="shift_id">Team <span class="text-danger">*</span></label>
+                                        <label for="shift_id">Shift <span class="text-danger">*</span></label>
                                         <select name="shift_id" class="form-control" id="shift_id" required>
                                             <option hidden value="">Select Shift Timings</option>
                                             @foreach ($shifts as $item)
@@ -406,7 +406,7 @@
                                             </div>
                                         </div>
 
-                                        <button data-repeater-create class="btn btn-primary mt-4" type="button">Add
+                                        <button data-repeater-create class="btn btn-primary mt-4 mb-3" type="button">Add
                                             More</button>
                                     </div>
 
