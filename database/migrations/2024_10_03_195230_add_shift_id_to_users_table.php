@@ -13,15 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('teams')) {
-        Schema::create('teams', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->foreignId('leader_id')->constrained('users')->default();
-
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('shift_id')->default(0);
         });
-    }
     }
 
     /**
@@ -31,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teams');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

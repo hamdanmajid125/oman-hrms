@@ -9,14 +9,14 @@
 
 
     @stack('css')
-    @stack('post-css')
     @include('includes.css')
+    @stack('post-css')
 </head>
 <body>
     @yield('content')
 
-    @include('includes.script')
     @stack('js')
+    @include('includes.script')
     @stack('post-js')
 
     

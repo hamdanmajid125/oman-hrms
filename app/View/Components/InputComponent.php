@@ -17,8 +17,9 @@ class InputComponent extends Component
     public $name;
     public $email;
     public $required;
+    public $value;
 
-    public function __construct($data = null, $labelText = '', $colClass = 'col-lg-12', $name = null,$email =null, $id = null, $type='text', $required=false )
+    public function __construct($data = null, $labelText = '', $colClass = 'col-lg-12', $name = null,$email =null, $id = null, $type='text', $required=false , $value=null)
     {
         $this->data = $data;
         $this->labelText = $labelText;
@@ -28,6 +29,7 @@ class InputComponent extends Component
         $this->type = $type;
         $this->id = $id;
         $this->required = $required;
+        $this->value = $value;
     }
 
 
@@ -46,6 +48,7 @@ class InputComponent extends Component
             'email'=>$this->email,
             'type'=>$this->type,
             'id'=>$this->id,
+            'value'=>$this->value,
             'required'=>$this->required
         ]));
     }

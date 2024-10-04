@@ -45,3 +45,12 @@
 .custom-nav{
     padding: 0 1rem;
 }
+
+.select2.select2-container{
+    width: 100% !important;
+}
+
+.form-control:disabled {
+    background: #bab6b67a;
+    color: #948b8b;
+}

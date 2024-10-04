@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{User, Department, Team};
+use App\Models\{User, Department, Team, Shift};
 use Spatie\Permission\Models\Role;
 
 use Hash;
 
 class UserController extends Controller
 {
-    /**{{  }}
+    /**{{}}
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -34,7 +34,8 @@ class UserController extends Controller
         $users = User::all();
         $roles = Role::all();
         $team = Team::all();
-        return view('users.create',compact('data','dept','roles','users','team'));
+        $shifts = Shift::all();
+        return view('users.create',compact('data','dept','roles','users','shifts','team'));
     }
 
     /**
@@ -60,6 +61,7 @@ class UserController extends Controller
         $user->setMeta('date_of_join',$request->input('doj'));
         $user->setMeta('phone',$request->input('phone'));
         $user->setMeta('gender',$request->input('gender'));
+       
         return redirect()->route('users.index')->with('success','Employee Created Successfully');
     }
 
@@ -83,7 +85,12 @@ class UserController extends Controller
     public function edit($id)
     {
         $data = User::findOrFail($id);
-        return view('users.create',compact('data'));
+        $dept = Department::all();
+        $users = User::all();
+        $roles = Role::all();
+        $team = Team::all();
+        $shifts = Shift::all();
+        return view('users.create',compact('data','dept','roles','users','shifts','team'));
     }
 
     /**
@@ -128,6 +135,46 @@ class UserController extends Controller
 
     public function saveEmployeeForm(Request $request)
     {
-        dd($request->all());
+        dump($request->all());
+        $user = $request->has('id') ? User::find($request->id) : new User;
+        $user->name = $request->name;
+        $user->department_id = $request->department_id;
+        $user->email = $request->email;
+        $user->reporting_authority = $request->reporting_authority;
+        $user->team_id = $request->team_id;
+        $user->shift_id = $request->shift_id;
+        $user->password = bcrypt('123456789');
+        $user->save();
+
+        foreach ($request->meta as $key => $value) {
+           $user->setMeta($key,$value);
+        }
+        if ($request->has('education')) {
+            $hasNull = false; 
+            $education_array = [];
+            foreach ($request->input('education') as $education) {
+                if (is_null($education['level']) || is_null($education['institue']) || is_null($education['grade'])) {
+                    $hasNull = true;
+                    break;
+                }
+            }
+            if (!$hasNull) {
+                array_push($education_array,json_encode($request->input('education')));
+            }
+            foreach ($request->input('preeducation') as $education) {
+                if (is_null($education['level']) || is_null($education['institue']) || is_null($education['grade'])) {
+                    $hasNull = true;
+                    break;
+                }
+            }
+            if (!$hasNull) {
+                array_push($education_array,json_encode($request->input('education')));
+            }
+            dd($education_array);
+        }
+        if ($request->has('roles')) {
+            $user->syncRoles($request->roles);
+        }
+        return response()->json(['status' => true]);
     }
 }
