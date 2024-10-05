@@ -84,6 +84,8 @@ Route::middleware('auth')->group(function () {
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'leaves','as'=>'leaves.'], function (){
     Route::get('all-leaves',[LeaveController::class,'allLeaves'])->name('allLeaves');
+    Route::post('approveLeave', [LeaveController::class, 'approve'])->name('approveLeave');
+    Route::post('rejectLeave', [LeaveController::class, 'reject'])->name('rejectLeave');
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'attendance','as'=>'attendance.'], function (){
