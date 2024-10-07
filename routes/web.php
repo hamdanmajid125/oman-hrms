@@ -11,7 +11,9 @@ use App\Http\Controllers\{
     DepartmentController,
     HolidayController,
     LeaveTypeController,
-    LeaveController
+    LeaveController,
+    TeamController,
+    TaxController
 };
 
 
@@ -72,10 +74,19 @@ Route::middleware('auth')->group(function () {
     Route::resource('leavetypes', LeaveTypeController::class);
     Route::post('get-leavetypes', [LeaveTypeController::class, 'getLeaveTypes'])->name('leavetype.get');
 
+    Route::resource('teams', TeamController::class);
+    Route::post('get-teams', [TeamController::class, 'getTeams'])->name('teams.get');
+
+    Route::resource('taxes', TaxController::class);
+    Route::post('get-taxes', [TaxController::class, 'getTaxes'])->name('taxes.get');
+
+   
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'leaves','as'=>'leaves.'], function (){
     Route::get('all-leaves',[LeaveController::class,'allLeaves'])->name('allLeaves');
+    Route::post('approveLeave', [LeaveController::class, 'approve'])->name('approveLeave');
+    Route::post('rejectLeave', [LeaveController::class, 'reject'])->name('rejectLeave');
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'attendance','as'=>'attendance.'], function (){

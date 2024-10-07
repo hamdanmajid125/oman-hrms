@@ -25,7 +25,7 @@
                                 <input type="date" name="date" value="{{ $data == null ? old('date') : $data->date }}" class="form-control">
                             </div>
                         </div>   
-                        <div class="text-center">
+                        <div class="text-center mt-2">
                             <button type="submit" class="btn btn-primary">{{ $data == null ? 'Create' : 'Update' }}
                                 Holiday</button>
                         </div>          

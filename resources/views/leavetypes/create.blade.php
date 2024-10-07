@@ -25,7 +25,7 @@
                                 <input type="text" name="days" value="{{ $data == null ? old('days') : $data->days }}" class="form-control">
                             </div>
                         </div>   
-                        <div class="text-center">
+                        <div class="text-center mt-2">
                             <button type="submit" class="btn btn-primary">{{ $data == null ? 'Create' : 'Update' }}
                                 Leave Type</button>
                         </div>          
