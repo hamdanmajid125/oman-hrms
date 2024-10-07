@@ -54,3 +54,7 @@
     background: #bab6b67a;
     color: #948b8b;
 }
+select.form-select:disabled {
+    background: #dedcdc;
+    color: #948b8b;
+}

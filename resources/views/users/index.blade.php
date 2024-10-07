@@ -24,6 +24,7 @@
                                 <th>S.No</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Roles</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -34,15 +35,24 @@
                                     <td>{{ $items->name }}</td>
                                     <td>{{ $items->email }}</td>
                                     <td>
+                                        @forelse ($items->getRoleNames() as $role)
+                                            <span class="badge bg-secondary">{{ $role }}</span>
+                                        @empty
+                                            <span class="badge bg-danger">Not assigned any role</span>
+                                        @endforelse
+                                    </td>
+                                    <td>
                                         <div class="action-buttons">
-                                            <a class="btn btn-sm btn-primary" href="{{ route('users.edit', $items->id) }}">Edit</a>
+                                            <a class="btn btn-sm btn-primary"
+                                                href="{{ route('users.edit', $items->id) }}">Edit</a>
                                             <form action="{{ route('users.destroy', $items->id) }}" method="POST">
                                                 <input type="hidden" name="id" value="{{ $items->id }}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                             </form>
-                                            <a href="{{ route('attendance.index', $items->id) }}" class="btn btn-sm btn-info">Show Attendance</a>
+                                            <a href="{{ route('attendance.index', $items->id) }}"
+                                                class="btn btn-sm btn-info">Show Attendance</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -63,4 +73,3 @@
 @push('post-js')
     @include('includes.datatable.script')
 @endpush
-

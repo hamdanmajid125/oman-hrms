@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('users', UserController::class);
+
     Route::post('/save-employee', [UserController::class, 'saveEmployeeForm'])->name('user.save.form');
     Route::post('/user-delete-repeater', [UserController::class, 'deleteRepeater'])->name('user.delete.repeater');
 

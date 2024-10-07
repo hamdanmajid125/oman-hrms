@@ -71,21 +71,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-
-    }
+  
 
     public function deleteRepeater(Request $request)
     {
         $user = User::find($request->id);
-        $education = json_decode($user->getMeta($request->key),true);
+        $education = $user->getMeta($request->key);
         foreach ($education as $key => $subArray) {
             if ($subArray == $request->input('value')) {
                 unset($education[$key]);
             }
         }
-        $user->setMeta($request->key,json_encode($education));
+        $user->setMeta($request->key,$education);
         return response()->json(['status'=>true]);
 
     }
@@ -164,7 +161,6 @@ class UserController extends Controller
         }
         if ($request->has('education')) {
             $hasNull = false;
-            $education_array = [];
             foreach ($request->input('education') as $education) {
                 if (is_null($education['level']) || is_null($education['institute']) || is_null($education['grade'])) {
                     $hasNull = true;
@@ -172,7 +168,14 @@ class UserController extends Controller
                 }
             }
             if (!$hasNull) {
-                $user->setMeta('education',json_encode($request->input('education')));
+                $education = $user->getMeta('education') ?? []; 
+                if (empty($education)) {
+                    $education = $request->input('education');
+                } else {
+                    $education = array_merge((array) $education, (array) $request->input('education'));
+                }
+                $user->setMeta('education', $education);
+
             }
 
         }
@@ -186,7 +189,36 @@ class UserController extends Controller
                 }
             }
             if (!$hasNull) {
-                $user->setMeta('work_experience',json_encode($request->input('work_experience')));
+                $education = $user->getMeta('work_experience') ?? []; 
+                if (empty($education)) {
+                    $education = $request->input('work_experience');
+                } else {
+                    $education = array_merge((array) $education, (array) $request->input('work_experience'));
+                }
+                $user->setMeta('work_experience', $education);
+
+            }
+
+        }
+ 
+        if ($request->has('allowance')) {
+            $hasNull = false;
+            $education_array = [];
+            foreach ($request->input('allowance') as $education) {
+                if (is_null($education['name']) || is_null($education['type']) || is_null($education['amount'])) {
+                    $hasNull = true;
+                    break;
+                }
+            }
+            if (!$hasNull) {
+                $education = $user->getMeta('allowance') ?? []; 
+                if (empty($education)) {
+                    $education = $request->input('allowance');
+                } else {
+                    $education = array_merge((array) $education, (array) $request->input('allowance'));
+                }
+                $user->setMeta('allowance', $education);
+
             }
 
         }

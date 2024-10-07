@@ -181,6 +181,10 @@
                             <div class="row">
                                 <input type="hidden" name="save_method" value="salary">
                                 <x-input-component :data="$data"
+                                    value="{{ $data ? $data->getMeta('acc_no') : old('meta[acc_no]') }}"
+                                    name="meta[acc_no]" id="acc_no" labelText="Account Number" type="text"
+                                    colClass="col-lg-12" required="true" />
+                                <x-input-component :data="$data"
                                     value="{{ $data ? $data->getMeta('salary') : old('meta[salary]') }}"
                                     name="meta[salary]" id="salary" labelText="Salary" type="number"
                                     colClass="col-lg-4" required="true" />
@@ -203,6 +207,85 @@
                                             @endforeach
                                         </select>
 
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <h6>Allowance</h6>
+                                    <hr>
+                                    @if ($data)
+                                        @if ($data->getMeta('allowance'))
+                                            @php
+                                                $count = 0;
+                                            @endphp
+                                            @foreach ($data->getMeta('allowance') as $item)
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label for="">Name</label>
+                                                        <input type="text" value="{{ $item['name'] }}"
+                                                            class="form-control" disabled>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="">Type</label>
+                                                        <select name="type" class="form-select" disabled>
+                                                            <option hidden>Select Pay Type</option>
+                                                            <option {{ $item['type'] == 'price' ? 'selected' : '' }}
+                                                                value="price">Price</option>
+                                                            <option {{ $item['type'] == 'percent' ? 'selected' : '' }}
+                                                                value="percent">Percentage</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="">Amount/Percentage</label>
+                                                        <input type="text" value="{{ $item['amount'] }}"
+                                                            class="form-control" disabled>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <button class="btn btn-danger mt-4"
+                                                            onclick="deleteForm(this.parentElement.parentElement,{{ json_encode($item) }},{{ $data->id }},'amount')"
+                                                            type="button">Delete</button>
+                                                    </div>
+                                                </div>
+                                                @php
+                                                    // Increment the counter for the next entry.
+                                                    $count++;
+                                                @endphp
+                                            @endforeach
+                                        @endif
+                                    @endif
+                                    <div class="repeater">
+
+                                        <div data-repeater-list="allowance">
+                                            <div data-repeater-item>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label for="">Name</label>
+                                                        <input type="text" name="name" class="form-control"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="">Type</label>
+                                                        <select name="type" class="form-select" required>
+                                                            <option hidden>Select Pay Type</option>
+                                                            <option value="price">Price</option>
+                                                            <option value="percent">Percentage</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="">Amount/Percentage</label>
+                                                        <input type="number" name="amount" class="form-control"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <button data-repeater-delete class="btn btn-danger mt-4"
+                                                            type="button">Remove</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Button to add more items to the repeater -->
+                                        <button data-repeater-create class="btn btn-primary mt-4 mb-4" type="button">Add
+                                            More</button>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -350,7 +433,7 @@
                                                 // Initialize the counter to the number of existing education entries.
                                                 $count = 0;
                                             @endphp
-                                            @foreach (json_decode($data->getMeta('education'), true) as $item)
+                                            @foreach ($data->getMeta('education') as $item)
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <label for="">Level</label>
@@ -420,7 +503,7 @@
                                     <hr>
                                     @if ($data)
                                         @if ($data->getMeta('work_experience'))
-                                            @foreach (json_decode($data->getMeta('work_experience'), true) as $item)
+                                            @foreach ($data->getMeta('work_experience') as $item)
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <label for="">Company</label>
@@ -481,7 +564,7 @@
                                     <h6>Essentials Documents</h6>
                                     <hr>
                                     <input type="file" class="filepond" name="filepond" multiple
-                                        data-allow-reorder="true"  data-max-files="3">
+                                        data-allow-reorder="true" data-max-files="3">
 
                                 </div>
 
@@ -535,7 +618,8 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('js/select2.min.css') }}">
     <link href="https://unpkg.com/filepond@4.31.4/dist/filepond.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css"
+        rel="stylesheet">
 @endpush
 
 @push('post-js')
@@ -547,20 +631,15 @@
     <script>
         FilePond.registerPlugin(
 
-            // encodes the file as base64 data
             FilePondPluginFileEncode,
 
-            // validates the size of the file
             FilePondPluginFileValidateSize,
 
-            // corrects mobile image orientation
             FilePondPluginImageExifOrientation,
 
-            // previews dropped images
             FilePondPluginImagePreview
         );
 
-        // Select the file input and use create() to turn it into a pond
         FilePond.create(
             document.querySelector('input.filepond')
         );
@@ -570,7 +649,7 @@
 
             defaultValues: {
                 'level': '',
-                'institute': '', // Consider correcting 'institue' to 'institute' to avoid future issues
+                'institute': '',
                 'grade': ''
             },
             show: function() {
@@ -645,7 +724,7 @@
         $('.submit-btn').click(function() {
             let data = {};
 
-            $('.emp-form .form-control').each(function() {
+            $('.emp-form .form-control, .emp-form .form-select').each(function() {
                 console.log($(this))
                 data[$(this).attr('name')] = $(this).val();
             });
