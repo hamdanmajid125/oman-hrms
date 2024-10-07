@@ -13,7 +13,8 @@ use App\Http\Controllers\{
     LeaveTypeController,
     LeaveController,
     TeamController,
-    TaxController
+    TaxController,
+    DiscrepancyController
 };
 
 
@@ -87,12 +88,21 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'leaves','as'=>'leaves.'], f
     Route::get('all-leaves',[LeaveController::class,'allLeaves'])->name('allLeaves');
     Route::post('approveLeave', [LeaveController::class, 'approve'])->name('approveLeave');
     Route::post('rejectLeave', [LeaveController::class, 'reject'])->name('rejectLeave');
+    Route::get('/',[LeaveController::class,'leave'])->name('leave');
+    Route::get('leave-request',[LeaveController::class,'leaveRequest'])->name('leaveRequest');
+    Route::post('apply-leave',[LeaveController::class,'appliedLeave'])->name('appliedLeave');
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'attendance','as'=>'attendance.'], function (){
     Route::get('/user/{id}/{month?}/{year?}',[AttendanceController::class,'attendance'])->name('index');
     Route::post('/timein', [AttendanceController::class, 'timeIn'])->name('timeIn');
     Route::post('/timeout/{id}', [AttendanceController::class, 'timeOut'])->name('timeOut');
+});
+
+Route::group(['middleware' => ['auth'], 'prefix' => 'discrepancy', 'as' => 'discrepancy.'], function(){
+    Route::get('/', [DiscrepancyController::class, 'index'])->name('allDiscrepancy');
+    Route::post('approve-discrepancy', [DiscrepancyController::class, 'approveDiscrepancy'])->name('approveDiscrepancy');
+    Route::post('reject-discrepancy', [DiscrepancyController::class, 'rejectDiscrepancy'])->name('rejectDiscrepancy');
 });
 
 

@@ -14,7 +14,7 @@
                                 <table id="tech-companies-1-clone" class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th id="tech-companies-1-col-0-clone">ID</th>
+                                            <th id="tech-companies-1-col-0-clone">EMP-ID</th>
                                             <th data-priority="1" id="tech-companies-1-col-1-clone">Name</th>
                                             <th data-priority="3" id="tech-companies-1-col-2-clone">Leave Type</th>
                                             <th data-priority="1" id="tech-companies-1-col-3-clone">Leave Date</th>

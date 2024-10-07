@@ -41,7 +41,13 @@
 
                         <li>
                             <a href="{{ route('leaves.allLeaves') }}">
-                                <span data-key="t-user">Leave Request</span>
+                                <span data-key="t-user">Company's Leave</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('discrepancy.allDiscrepancy') }}">
+                                <span data-key="t-user">Discrepancy</span>
                             </a>
                         </li>
 
@@ -126,6 +132,21 @@
                         <li>
                             <a href="{{ route('taxes.index') }}">
                                 <span data-key="t-calendar">Tax List</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i class="mdi mdi-calendar-today"></i>
+                        <span data-key="t-apps">Leave Request</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ route('leaves.leave') }}">
+                                <span data-key="t-calendar">Leave Request List</span>
                             </a>
                         </li>
                     </ul>

@@ -17,7 +17,6 @@ return new class extends Migration
             Schema::create('discrepancies', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users');
-                $table->integer('company_id');
                 $table->string('date');
                 $table->longText('desc');
                 $table->string('status')->default('pending');
