@@ -240,8 +240,7 @@
                                                             class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-danger mt-4"
-                                                            onclick="deleteForm(this.parentElement.parentElement,{{ json_encode($item) }},{{ $data->id }},'amount')"
+                                                        <button class="btn btn-danger mt-4" onclick="deleteForm(this.parentElement.parentElement,{{ json_encode($item) }},{{ $data->id }},'amount')"
                                                             type="button">Delete</button>
                                                     </div>
                                                 </div>

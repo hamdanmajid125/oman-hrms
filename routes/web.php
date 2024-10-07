@@ -90,7 +90,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'leaves','as'=>'leaves.'], f
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'attendance','as'=>'attendance.'], function (){
-    Route::get('/{id}',[AttendanceController::class,'index'])->name('index');
+    Route::get('/user/{id}/{month?}/{year?}',[AttendanceController::class,'attendance'])->name('index');
     Route::post('/timein', [AttendanceController::class, 'timeIn'])->name('timeIn');
     Route::post('/timeout/{id}', [AttendanceController::class, 'timeOut'])->name('timeOut');
 });
