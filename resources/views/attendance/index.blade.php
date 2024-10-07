@@ -48,11 +48,6 @@
         <div class="mb-4">
             <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('lead.allLeads') }}">
-                            <i class="bi bi-globe2 small me-2"></i> User
-                        </a>
-                    </li>
                     <li class="breadcrumb-item " aria-current="page">Attendance</li>
 
                     <li class="breadcrumb-item active" aria-current="page">{{ date('F', mktime(0, 0, 0, $month, 10)) }} -
