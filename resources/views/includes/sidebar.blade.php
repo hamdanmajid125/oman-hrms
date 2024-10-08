@@ -66,7 +66,7 @@
                         </li>
                     </ul>
                 </li>
-                
+
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i class="mdi mdi-office-building-outline"></i>
@@ -170,7 +170,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>-
+                </li>
 
             </ul>
 
@@ -184,7 +184,7 @@
                     </div>
                 </div>
             </div>
-            </ul>       
+            </ul>
         </div>
         <!-- Sidebar -->
     </div>

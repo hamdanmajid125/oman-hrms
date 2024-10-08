@@ -174,3 +174,27 @@ function currency_list(){
         array("name" => "Zimbabwean dollar", "code" => "ZWL")
     );
 }
+
+function countWeekdays($year, $month) {
+    $totalDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    $currentYear = date('Y');
+    $currentMonth = date('m');
+    $currentDay = date('d');
+
+    if ($year == $currentYear && $month == $currentMonth) {
+        $totalDays = $currentDay;
+    }
+
+    $weekdaysCount = 0;
+
+    for ($day = 1; $day <= $totalDays; $day++) {
+        $date = "$year-$month-$day";
+        $dayOfWeek = date('w', strtotime($date));
+
+        if ($dayOfWeek != 0 && $dayOfWeek != 6) {
+            $weekdaysCount++;
+        }
+    }
+
+    return $weekdaysCount;
+}

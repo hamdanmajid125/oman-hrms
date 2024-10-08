@@ -86,7 +86,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('payrolls',[PayrollController::class,'payroll'])->name('payroll');
 
-   
+    Route::resource('jobs', JobController::class);
+    Route::post('get-jobs', [JobController::class, 'getJobs'])->name('jobs.get');
+
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'leaves','as'=>'leaves.'], function (){
