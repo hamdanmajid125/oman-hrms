@@ -41,7 +41,7 @@ use App\Http\Controllers\{
 */
 
 Route::get('/', function () {
-    Auth::user()->assignRole('admin');
+    // Auth::user()->assignRole('admin');
     return view('welcome');
 });
 

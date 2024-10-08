@@ -9,30 +9,31 @@ use Carbon\Carbon;
 class PayrollController extends Controller
 {
 
-    public function payroll()
+    public function payroll(Request $request)
     {
-        if(request()->has('month')){
-            $month = request()->month;
-        }else{
-            $month = date('m');
+        if(request()->has('start_date')){
+            $start_date = $request->start_date;
         }
-        if(request()->has('year')){
-            $year = request()->year;
-        }else{
-            $year = date('Y');
+        else{
+            $start_date = date('Y-m-01');
+            $request->request->add(['start_date' => $start_date]); 
         }
-        $date = '01-'.$month.'-'.$year;
-        $firstday = strtotime(date('Y-m-01', strtotime($date)));
-        $lastday = strtotime(date('Y-m-t', strtotime($date)));
+        if(request()->has('end_date')){
+            $end_date = $request->end_date;
+        }
+        else{
+            $end_date = date('Y-m-t');
+      
+            $request->request->add(['end_date' => $end_date]); 
+        }
+        $firstday = strtotime(date('Y-m-01', strtotime($start_date)));
+        $lastday = strtotime(date('Y-m-t', strtotime($end_date)));
 
         $users = User::withoutRole('admin')->get();
         $attendance = array();
-
+        $final_data = [];
         foreach ($users as $thisuser) {
             $userdata = User::where('id', $thisuser->id)->first();
-            $date = "01-" . $month . "-" . $year;
-            $firstday = strtotime(date('Y-m-01', strtotime($date)));
-            $lastday = strtotime(date('Y-m-t', strtotime($date)));
 
             $totalannualleaves = LeaveTypes::where('name', 'Annual Leaves')->pluck('days')->first();
             $totalcasualleaves = LeaveTypes::where('name', 'Casual Leaves')->pluck('days')->first();
@@ -43,12 +44,12 @@ class PayrollController extends Controller
             $annualleaves = $totalannualleaves - $takenannualleaves;
             $casualleaves = $totalcasualleaves - $takencasualleaves;
             $sickleaves = $totalsickleaves - $takensickleaves;
-            $totalDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
             $absent = 0;
             $late = 0;
             $early = 0;
             $halfday = 0;
+
             for ($i = $firstday; $i <= $lastday; $i += 86400) {
                     $perdayattendance = Attendance::where([['user_id', '=', $thisuser->id], ['date', '=', $i]])->first();
                     $day = date('l', $i);
@@ -56,11 +57,17 @@ class PayrollController extends Controller
                     $disrepencyofday = Discrepancy::where('user_id',$thisuser->id)->where('date',$i)->first();
                     $leaves = Leaves::where('user_id',$thisuser->id)->where('date',$i)->first();
                     if ($disrepencyofday) {
-                        $data = ['username' => $userdata->name, 'department' => $userdata->getDepart->name, 'designation' => $userdata->getMeta('designation'), 'status' => 'discrepencry', 'timein' => date('h:i:s A', $disrepencyofday->timein), 'timeout' => date('h:i:s A', $disrepencyofday->timeout), 'totalhours' => gmdate('H:i:s', $disrepencyofday->timeout - $disrepencyofday->timein), 'date' => date('d-M-Y', $i), 'day' => $day, 'name' =>  'Discrepencry is in (Status: '.$disrepencyofday->status.')','reason' => $disrepencyofday->desc];
+                        if ($disrepencyofday->status !== 'approved') {
+                           $late++;
+                        }
+                       
                     }
                     elseif($leaves){
-                        $data = ['username' => $userdata->name, 'department' => $userdata->department->name, 'designation' => $userdata->getMeta('designation'), 'status' => 'absent', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Leave Availed from ' . $leaves->leavetype->name.' (Status: '.$leaves->final_status.')','reason' => $leaves->reason];
-                        $absent++;
+                        if ($disrepencyofday->final_status !== 'approved') {
+                            $absent++;
+                         }
+                       
+                        
 
                     }
                     elseif ($perdayattendance == NULL) {
@@ -77,8 +84,12 @@ class PayrollController extends Controller
                                 } elseif (Leaves::where(['date' => $i, 'user_id' => $thisuser->id, 'final_status' => 'approved'])->count() > 0) {
                                     $leavedata = Leaves::where(['date' => $i, 'user_id' => $thisuser->id, 'final_status' => 'approved'])->first();
                                     $data = ['username' => $userdata->name, 'department' => $userdata->gdepartmentetDepart->name, 'designation' => $userdata->getMeta('designation'), 'status' => 'absent', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Leave Availed from ' . $leavedata->leavetype->name, 'reason' => '--'];
-                                } else {
+                                
+                                } 
+                                else if(date('d-M-Y',$i)!= date('d-M-Y')) {
                                     $data = ['username' => $userdata->name, 'department' => $userdata->department->name, 'designation' => $userdata->getMeta('designation'), 'status' => 'absent', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Absent', 'reason' => '--'];
+
+                                    $absent++;
                                 }
                             }
                         }
@@ -89,6 +100,7 @@ class PayrollController extends Controller
                         $halfday++;
                     } elseif ($perdayattendance->totalhours < 16200 && $perdayattendance->totalhours != NULL) {
                         $data = ['username' => $userdata->name, 'department' => $userdata->department->name, 'designation' => $userdata->getMeta('designation'), 'status' => 'nohalfday', 'timein' => date('h:i:s A', $perdayattendance->timein), 'timeout' => date('h:i:s A', $perdayattendance->timeout), 'totalhours' => gmdate('H:i:s', $perdayattendance->totalhours), 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Less then Half Day (Absent)', 'reason' => '--'];
+                        $absent++;
                     } elseif ($perdayattendance->timeout == NULL && $perdayattendance->timein != NULL) {
 
                         $data = ['username' => $userdata->name, 'department' => $userdata->department->name, 'designation' => $userdata->getMeta('designation'), 'status' => 'forgettotimeout', 'timein' => date('h:i:s A', $perdayattendance->timein), 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Forgot to Timeout', 'reason' => '--'];
@@ -117,21 +129,20 @@ class PayrollController extends Controller
                         array_push($attendance, $data);
 
             }
-            dump($annualleaves);
-            dump($casualleaves);
-            dump($sickleaves);
-            dump($takencasualleaves);
-            dump($takensickleaves);
-            dump($totalsickleaves);
-            dump('================');
-            dump('Absent: ',$absent);
-            dump('Late: ',$late);
-            dump('Early: ',$early);
-            dump('Halfday: ',$halfday);
-//             $totalAbsents = floor($late / 3) + floor($halfday / 3) + $absent;
-// $perDayDeduction = floatval($userdata->getMeta('after_tax_salary')) -(floatval($userdata->getMeta('after_tax_salary'))/cal_days_in_month(CAL_GREGORIAN, $month, $year)) *
-//             dd($perDayDeduction);
+           
+            $totalAbsents = floor($early / 3) + floor($late / 3) + floor($halfday / 3) + $absent;
+         
+            $totalSalaryDeduction = floatval($userdata->getMeta('after_tax_salary')) - (floatval($userdata->getMeta('after_tax_salary'))/30 * $totalAbsents);
+            array_push($final_data,[
+                'id' =>$userdata->id,
+                'currency' =>$userdata->getMeta('currency'),
+                'name' => $userdata->name,
+                'image' => $userdata->image ? $userdata->image : 'images/no-user.png',
+                'salary' => $userdata->getMeta('after_tax_salary'),
+                'deduction' => $totalSalaryDeduction
+            ]);
         }
+        return view('payrolls.index',compact('final_data'));
 
     }
 }

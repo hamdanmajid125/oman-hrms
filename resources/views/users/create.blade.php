@@ -199,11 +199,11 @@
                                         <label for="currency">Currency</label>
                                         <select name="meta[currency]" id="currency" class="form-control">
                                             @foreach (currency_list() as $item)
-                                                <option
-                                                    {{ $data ? ($data->getMeta('currency') == $item['code'] ? 'selected' : '') : '' }}
+                                                {{-- <option
+                                                    {{ $data ? ($data->getMeta('currency') ==  currency_list()[$data->getMeta('currency')]['symbol'] ? 'selected' : '') : '' }}
                                                     {{ $item['code'] == 'USD' ? 'selected' : '' }}
                                                     value="{{ $item['code'] }}">
-                                                    {{ $item['name'] . ' (' . $item['code'] . ')' }}</option>
+                                                    {{ $item['name'] . ' (' . $item['code'] . ')' }}</option> --}}
                                             @endforeach
                                         </select>
 

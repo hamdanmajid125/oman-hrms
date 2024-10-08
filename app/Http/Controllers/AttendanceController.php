@@ -144,7 +144,7 @@ class AttendanceController extends Controller
 
                     if ($timeIn->format('H:i:s') > $shiftStartTimeWithGrace->format('H:i:s')) {
                         $data['status'] = 'late';
-                    } elseif ($perdayattendance->totalhours < ($userdata->shift()->shift_hours * 3600)) {
+                    } elseif ($perdayattendance->totalhours < ($userdata->shift->shift_hours * 3600)) {
                         $data['status'] = 'early';
                     }
                 }
