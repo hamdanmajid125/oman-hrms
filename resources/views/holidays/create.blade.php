@@ -16,13 +16,13 @@
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Holiday Name</label>
-                                <input class="form-control" name="name" type="text" value="{{ $data == null ? old('name') : $data->name }}" id="name">
+                                <input class="form-control" name="name" type="text" value="{{ $data == null ? old('name') : $data->name }}" id="name" required>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label for="desc" class="form-label">Date</label>
-                                <input type="date" name="date" value="{{ $data == null ? old('date') : $data->date }}" class="form-control">
+                                <input type="date" name="date" value="{{ $data == null ? old('date') : $data->date }}" class="form-control" required>
                             </div>
                         </div>   
                         <div class="text-center mt-2">

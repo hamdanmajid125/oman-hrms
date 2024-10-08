@@ -16,7 +16,7 @@
                         <div class="col-lg-4">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Team Name</label>
-                                <input class="form-control" name="name" type="text" value="{{ $data == null ? old('name') : $data->name }}" id="name">
+                                <input class="form-control" name="name" type="text" value="{{ $data == null ? old('name') : $data->name }}" id="name" required>
                             </div>
                         </div>
                         <div class="col-lg-4">

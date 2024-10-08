@@ -16,17 +16,17 @@
                         <div class="col-lg-4">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Shift Name</label>
-                                <input class="form-control" name="name" type="text" value="{{ $data == null ? old('name') : $data->name }}" id="name">
+                                <input class="form-control" name="name" type="text" value="{{ $data == null ? old('name') : $data->name }}" id="name" required>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <label for="starting_time" class="form-label">Starting Time</label>
-                            <input type="time" value="{{ $data == null ? old('starting_time') : $data->starting_time }}" name="starting_time" class="form-control">
+                            <input type="time" value="{{ $data == null ? old('starting_time') : $data->starting_time }}" name="starting_time" class="form-control" required>
                         </div>
 
                         <div class="col-lg-4">
                             <label for="ending_time" class="form-label">Ending Time</label>
-                            <input type="time" value="{{ $data == null ? old('ending_time') : $data->ending_time }}" name="ending_time" class="form-control">
+                            <input type="time" value="{{ $data == null ? old('ending_time') : $data->ending_time }}" name="ending_time" class="form-control" required>
                         </div>
 
                     </div>

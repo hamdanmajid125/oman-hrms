@@ -16,22 +16,22 @@
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label for="from" class="form-label">From</label>
-                                <input class="form-control" name="from" type="text" value="{{ $data == null ? old('from') : $data->from }}" id="from">
+                                <input class="form-control" name="from" type="text" value="{{ $data == null ? old('from') : $data->from }}" id="from" required>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <label for="to" class="form-label">To</label>
-                            <input type="text" name="to" id="to" value="{{ $data == null ? old('to') : $data->to }}" class="form-control">
+                            <input type="text" name="to" id="to" value="{{ $data == null ? old('to') : $data->to }}" class="form-control" required>
                         </div>
 
                         <div class="col-lg-6">
                             <label for="tax_percent" class="form-label">Tax Percent</label>
-                            <input type="text" name="tax_percent" id="tax_percent" value="{{ $data == null ? old('tax_percent') : $data->tax_percent }}" class="form-control">
+                            <input type="text" name="tax_percent" id="tax_percent" value="{{ $data == null ? old('tax_percent') : $data->tax_percent }}" class="form-control" required>
                         </div>
 
                         <div class="col-lg-6">
                             <label for="amount" class="form-label">Amount</label>
-                            <input type="amount" name="amount" id="amount" value="{{ $data == null ? old('amount') : $data->amount }}" class="form-control">
+                            <input type="amount" name="amount" id="amount" value="{{ $data == null ? old('amount') : $data->amount }}" class="form-control" required>
                         </div>
                     </div>
                     <div class="text-center mt-2">

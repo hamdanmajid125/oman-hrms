@@ -50,11 +50,7 @@ class LeaveController extends Controller
         $typedays = LeaveTypes::where('id', $request->type)->pluck('days')->first();
         $typename = LeaveTypes::where('id', $request->type)->pluck('name')->first();
         $takendays = Leaves::where(['type' => $request->type, 'user_id' => auth()->user()->id, 'year' => date('Y')])->count();
-        if ($request->half_day == NULL) {
-            $halfday = 0;
-        } else {
-            $halfday = 1;
-        }
+        $halfday = $request->half_day;
         if ($request->end_date == NULL) {
             if ($takendays >= $typedays) {
                 $message = $typename . " are completely availed by you!";

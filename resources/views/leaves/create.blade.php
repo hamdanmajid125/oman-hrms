@@ -15,7 +15,7 @@
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label for="start_date" class="form-label">Start Date</label>
-                                <input class="form-control" name="start_date" type="date" id="start_date">
+                                <input class="form-control" name="start_date" type="date" id="start_date" required>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -34,7 +34,7 @@
 
                         <div class="col-lg-6">
                             <label for="type" class="form-label">Leave Type</label>
-                            <select name="type" id="type" class="form-select">
+                            <select name="type" id="type" class="form-select" required>
                                 <option selected hidden>Select Leave Type</option>
                                 @foreach ($leaveType as $items)
                                     <option value="{{ $items->id }}">{{ $items->name }}</option>
@@ -44,7 +44,7 @@
 
                         <div class="col-lg-12">
                             <label for="reason" class="form-label">Reason</label>
-                            <textarea name="reason" id="reason" cols="30" rows="10" class="form-control"></textarea>
+                            <textarea name="reason" id="reason" cols="30" rows="10" class="form-control" required></textarea>
                         </div>
                     </div>
                     <div class="text-center mt-2">

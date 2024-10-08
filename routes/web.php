@@ -14,7 +14,8 @@ use App\Http\Controllers\{
     LeaveController,
     TeamController,
     TaxController,
-    DiscrepancyController
+    DiscrepancyController,
+    JobController
 };
 
 
@@ -81,7 +82,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('taxes', TaxController::class);
     Route::post('get-taxes', [TaxController::class, 'getTaxes'])->name('taxes.get');
 
-   
+    Route::resource('jobs', JobController::class);
+    Route::post('get-jobs', [TaxController::class, 'getJobs'])->name('jobs.get');   
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'leaves','as'=>'leaves.'], function (){

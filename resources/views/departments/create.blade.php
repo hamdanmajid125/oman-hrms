@@ -16,13 +16,13 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Department Name</label>
-                                <input class="form-control" name="name" type="text" value="{{ $data == null ? old('name') : $data->name }}" id="name">
+                                <input class="form-control" name="name" type="text" value="{{ $data == null ? old('name') : $data->name }}" id="name" required>
                             </div>
                         </div>
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label for="desc" class="form-label">Description</label>
-                                <textarea name="desc" id="desc" cols="30" rows="10" class="form-control">{{ $data == null ? old('desc') : $data->desc }}</textarea>
+                                <textarea name="desc" id="desc" cols="30" rows="10" class="form-control" required>{{ $data == null ? old('desc') : $data->desc }}</textarea>
                             </div>
                         </div>   
                         <div class="text-center mt-2">
