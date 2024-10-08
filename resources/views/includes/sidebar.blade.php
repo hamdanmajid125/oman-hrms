@@ -126,9 +126,14 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i class="mdi mdi-cash-minus"></i>
-                        <span data-key="t-apps">Tax</span>
+                        <span data-key="t-apps">Payrolls</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="{{ route('payroll') }}">
+                                <span data-key="t-calendar">Payrolls</span>
+                            </a>
+                        </li>
                         <li>
                             <a href="{{ route('taxes.index') }}">
                                 <span data-key="t-calendar">Tax List</span>
@@ -179,6 +184,7 @@
                     </div>
                 </div>
             </div>
+            </ul>       
         </div>
         <!-- Sidebar -->
     </div>

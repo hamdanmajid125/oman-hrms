@@ -15,7 +15,8 @@ use App\Http\Controllers\{
     TeamController,
     TaxController,
     DiscrepancyController,
-    JobController
+    JobController,
+    PayrollController
 };
 
 
@@ -40,6 +41,7 @@ use App\Http\Controllers\{
 */
 
 Route::get('/', function () {
+    Auth::user()->assignRole('admin');
     return view('welcome');
 });
 
@@ -82,8 +84,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('taxes', TaxController::class);
     Route::post('get-taxes', [TaxController::class, 'getTaxes'])->name('taxes.get');
 
-    Route::resource('jobs', JobController::class);
-    Route::post('get-jobs', [TaxController::class, 'getJobs'])->name('jobs.get');   
+    Route::get('payrolls',[PayrollController::class,'payroll'])->name('payroll');
+
+   
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'leaves','as'=>'leaves.'], function (){

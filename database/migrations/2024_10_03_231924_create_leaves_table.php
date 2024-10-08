@@ -19,6 +19,7 @@ return new class extends Migration
                 $table->string('date')->nullable();
                 $table->string('year')->nullable();
                 $table->foreignId('user_id')->default(0);
+                $table->string('half_day')->default(0);
                 $table->string('type')->nullable();
                 $table->string('reason')->nullable();
                 $table->string('lead_status')->default('pending');

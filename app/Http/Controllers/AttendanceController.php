@@ -54,7 +54,6 @@ class AttendanceController extends Controller
         $halfdays = 0;
         for ($i = $firstday; $i <= $lastday; $i += 86400) {
             $perdayattendance = Attendance::where([['user_id', '=', $id], ['date', '=', $i]])->first();
-
             $disrepency = Discrepancy::where('user_id', $id)->where('date', $i)->count();
                         $disrepencystatus = Discrepancy::where('user_id', $id)->where('date', $i)->pluck('status')->first();
                         $forgettimeout = Discrepancy::where('user_id', $id)->where('date', $i)->pluck('timeout')->first();
@@ -139,9 +138,9 @@ class AttendanceController extends Controller
                 if ($data['timein'] != null) {
 
                     $timeIn = Carbon::createFromTimestamp($perdayattendance->timein);
-                    $shiftStartTime = Carbon::parse($userdata->shift()->starting_hours);
+                    $shiftStartTime = Carbon::parse($userdata->shift->starting_hours);
 
-                    $shiftStartTimeWithGrace = $shiftStartTime->addMinutes($userdata->shift()->grace_time);
+                    $shiftStartTimeWithGrace = $shiftStartTime->addMinutes($userdata->shift->grace_time);
 
                     if ($timeIn->format('H:i:s') > $shiftStartTimeWithGrace->format('H:i:s')) {
                         $data['status'] = 'late';

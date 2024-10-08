@@ -1,4 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
+
 <style>
     p#forgetDate {
         font-weight: 700;
@@ -42,7 +43,7 @@
         background: #15feab !important;
     }
 </style>
-@section('content')
+@section('page_content')
     <div class="content ">
 
         <div class="mb-4">
@@ -55,22 +56,17 @@
                 </ol>
             </nav>
         </div>
-        @can('attendance user filter')
-            <div class="row align-items-center">
-                <div class="col-md-4 offset-2">
-                    <select class="form-select select2-example user">
-                        <option selected disabled>Select User</option>
-                        @foreach ($users as $thisuser)
-                            <option value="{{ $thisuser->id }}" {{ $userdata->id == $thisuser->id ? 'selected' : 'none' }}>
-                                {{ $thisuser->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <input type="submit" class="changeuser btn btn-primary" name="submit" value="Filter" />
-                </div>
+        <div class="row align-items-center">
+            <div class="col-md-4 offset-2">
+                <select class="form-select select2-example user">
+                    <option selected disabled>Select User</option>
+
+                </select>
             </div>
-        @endcan
+            <div class="col-md-4">
+                <input type="submit" class="changeuser btn btn-primary" name="submit" value="Filter" />
+            </div>
+        </div>
         <div
             class="container d-flex align-items-center justify-content-center h-100 flex-column flex-md-row text-center text-md-start mb-3">
             <div class="avatar avatar-xl me-3">
@@ -286,7 +282,7 @@ table-danger @endif">
                             </td>
                             <td>
                                 @if ($thisattendance['status'] == 'forgettotimeout')
-                               
+
                                     @if ($thisattendance['num_of_descrepancy'] == 0)
                                         @if ($thisattendance['disc_allowed'] == 1)
                                             <a href="javascript:;"
@@ -313,7 +309,7 @@ table-danger @endif">
                                 @else
                                 @endif
                                 @if ($userdata->getMeta('employment_status') == 'Permanent')
-                                    @if ( $thisattendance['status'] == 'absent')
+                                    @if ($thisattendance['status'] == 'absent')
 
 
                                         @if (!$thisattendance['disc_status'])
@@ -332,7 +328,7 @@ table-danger @endif">
                                             @endif
                                         @endif
                                         @if (!$thisattendance['leave_status'])
-                                            @if (!array_key_exists("num_of_descrepancy",$thisattendance))
+                                            @if (!array_key_exists('num_of_descrepancy', $thisattendance))
                                                 @dd($thisattendance)
                                             @endif
                                             @if ($thisattendance['num_of_descrepancy'] == 0)
@@ -376,7 +372,7 @@ table-danger @endif">
 
 
 @push('scripts')
-
+    {{-- 
 
     <script>
         $('.filterattendance').on('click', function(e) {
@@ -415,13 +411,13 @@ table-danger @endif">
             url = url.replace(':year', year);
             location.href = url;
         })
-    </script>
+    </script> --}}
 
 
 
     <!--Edit-->
 
-    <div class="modal fade" id="EditDiscrepencyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    {{-- <div class="modal fade" id="EditDiscrepencyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content dropzone">
@@ -625,8 +621,7 @@ table-danger @endif">
                 }
             });
         });
-    </script>
+    </script> --}}
 
     <!--Edit-->
-
 @endpush
