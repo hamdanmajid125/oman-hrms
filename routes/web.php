@@ -19,6 +19,8 @@ use App\Http\Controllers\{
     PayrollController
 };
 
+use App\Http\Controllers\front\HomeController;
+
 
 // use App\Models\Department;
 // Route::get('create-dept', function(){
@@ -40,10 +42,10 @@ use App\Http\Controllers\{
 |
 */
 
-Route::get('/', function () {
-    // Auth::user()->assignRole('admin');
-    return view('welcome');
-});
+Route::get('/',[HomeController::class,'index'])->name('welcome');
+Route::get('jobs/{id}',[HomeController::class,'jobDetail'])->name('job.Detail');
+Route::get('apply-job/{id}',[HomeController::class,'applyJob'])->name('apply.Job');
+Route::post('submit-application',[HomeController::class,'submitApplication'])->name('submitApplication');
 
 Route::get('/dashboard', function () {
     $attendance = App\Models\Attendance::where('user_id', auth()->id())->first();
