@@ -42,11 +42,11 @@ class User extends Authenticatable
 
     public function shift()
     {
-        return $this->belongsTo(Shift::class);
+        return $this->belongsTo(Shift::class,'shift_id');
     }
     public function department()
     {
-        return $this->belongsTo(Shift::class);
+        return $this->belongsTo(Department::class);
     }
 
 }

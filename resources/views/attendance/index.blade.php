@@ -286,25 +286,25 @@ table-danger @endif">
                                     @if ($thisattendance['num_of_descrepancy'] == 0)
                                         @if ($thisattendance['disc_allowed'] == 1)
                                             <a href="javascript:;"
-                                                data-expected="{{ $thisattendance['timein'] + ($userdata->shift()->shift_hours + 0.5) * 3600 }}"
+                                                data-expected="{{ $thisattendance['timein'] + ($userdata->shift->shift_hours + 0.5) * 3600 }}"
                                                 data-showdate="{{ date('d-M-Y, l', $thisattendance['date']) }}"
                                                 data-timein="{{ date('H:i:s', $thisattendance['timein']) }}"
                                                 data-bs-original-title="Fill Discrepancy" data-bs-toggle="modal"
                                                 data-bs-target="#EditDiscrepencyModal"
                                                 data-date="{{ $thisattendance['date'] }}" class="filldiscrepency"><i
                                                     style="font-size: 32px;line-height: 18px;"
-                                                    class="bi bi-card-text disable-after-submit"></i></a>
+                                                    class="mdi mdi-android-messages disable-after-submit"></i></a>
                                         @else
                                             <a href="javascript:;" class="disablediscrepency" data-bs-toggle="tooltip"
                                                 data-bs-original-title="Discrepancy Limit Exceed this month"><i
                                                     style="font-size: 32px;line-height: 18px;"
-                                                    class="bi bi-card-text"></i></a>
+                                                    class="mdi mdi-android-messages"></i></a>
                                         @endif
                                     @else
                                         <a href="javascript:;" class="disablediscrepency" data-bs-toggle="tooltip"
                                             data-bs-original-title="Discrepancy Status = {{ $thisattendance['disc_status'] }}"><i
                                                 style="font-size: 32px;line-height: 18px;"
-                                                class="bi bi-card-text"></i></a>
+                                                class="mdi mdi-android-messages"></i></a>
                                     @endif
                                 @else
                                 @endif
@@ -318,13 +318,13 @@ table-danger @endif">
                                                     data-bs-toggle="modal" data-bs-target="#EditLeaveModal"
                                                     data-date="{{ $thisattendance['date'] }}" class="fillleave"><i
                                                         style="font-size: 32px;line-height: 18px;"
-                                                        class="bi bi-calendar-plus disable-after-submit"></i></a>
+                                                        class="mdi mdi-android-messages disable-after-submit"></i></a>
                                             @else
                                                 <a href="javascript:;" class="disablediscrepency"
                                                     data-bs-toggle="tooltip"
                                                     data-bs-original-title="Applied Leave Status = {{ $thisattendance['leave_status'] }}"><i
                                                         style="font-size: 32px;line-height: 18px;"
-                                                        class="bi bi-card-text"></i></a>
+                                                        class="mdi mdi-android-messages"></i></a>
                                             @endif
                                         @endif
                                         @if (!$thisattendance['leave_status'])
@@ -340,13 +340,13 @@ table-danger @endif">
                                                         data-date="{{ $thisattendance['date'] }}"
                                                         class="filldiscrepency"><i
                                                             style="font-size: 32px;line-height: 18px;"
-                                                            class="bi bi-card-text disable-after-submit"></i></a>
+                                                            class="mdi mdi-android-messages disable-after-submit"></i></a>
                                                 @else
                                                     <a href="javascript:;" class="disablediscrepency"
                                                         data-bs-toggle="tooltip"
                                                         data-bs-original-title="Discrepancy Limit Exceed this month"><i
                                                             style="font-size: 32px;line-height: 18px;"
-                                                            class="bi bi-card-text"></i></a>
+                                                            class="mdi mdi-android-messages"></i></a>
 
                                                 @endif
                                             @else
@@ -354,7 +354,7 @@ table-danger @endif">
                                                     data-bs-toggle="tooltip"
                                                     data-bs-original-title="Discrepancy Status = {{ $thisattendance['disc_status'] }}"><i
                                                         style="font-size: 32px;line-height: 18px;"
-                                                        class="bi bi-card-text"></i></a>
+                                                        class="mdi mdi-android-messages"></i></a>
                                             @endif
                                         @endif
                                     @else
@@ -371,9 +371,9 @@ table-danger @endif">
 @endsection
 
 
-@push('scripts')
-    {{-- 
-
+@push('js')
+    
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
         $('.filterattendance').on('click', function(e) {
             e.preventDefault();
@@ -411,14 +411,64 @@ table-danger @endif">
             url = url.replace(':year', year);
             location.href = url;
         })
-    </script> --}}
+    </script>
 
 
 
     <!--Edit-->
+    <div class="modal fade" id="EditDiscrepencyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="EditDiscrepencyModalLabel">Fill Discrepancy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="updatedisform" id="updatedisform" method="POST"
+                    action="{{ route('discrepancy.addDiscrepancy') }}">
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <input type="hidden" name="date" class="form-control date" />
+                            <input type="hidden" name="id" class="id" id="id">
+                            {{ @csrf_field() }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-12">
+                            <label for="date">Date:</label>
+                            <p id="forgetDate"></p>
+                        </div>
+                        <div class="mb-3 col-md-12">
+                            <label for="recipient-name" class="col-form-label">Time In:</label>
+                            <input type="time" step="1" class="form-control" name="timein_forget"
+                                id="timein_forget" required readonly>
+                        </div>
+                        <div class="mb-3 col-md-12">
+                            <label for="recipient-name" class="col-form-label">Expected Timeout:</label>
+                            <input type="time" class="form-control" name="timeout_forget" id="timeout_forget"
+                                required>
+                        </div>
+                        <div class="mb-3 col-md-12">
+                            <label for="recipient-name" class="col-form-label">Description:</label>
+                            <textarea name="desc" class="desc form-control" placeholder="Description" id="desc" rows="6"
+                                cols="50"></textarea>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary updatetaxsubmit" id="submitBtn">Submit</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
 
-    {{-- <div class="modal fade" id="EditDiscrepencyModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+
+
+
+    {{--  <div class="modal fade" id="EditDiscrepencyModal" aria-labelledby="exampleModalToggleLabel" tabindex="-1" aria-modal="true" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content dropzone">
                 <div class="modal-header">
@@ -464,12 +514,12 @@ table-danger @endif">
                 </form>
             </div>
         </div>
-    </div>
+    </div>  --}}
 
 
 
 
-    <div class="modal fade" id="EditWorkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{--  <div class="modal fade" id="EditWorkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content dropzone">
                 <div class="modal-header">
@@ -501,12 +551,12 @@ table-danger @endif">
                 </form>
             </div>
         </div>
-    </div>
+    </div>  --}}
 
 
 
 
-    <div class="modal fade" id="EditLeaveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{--  <div class="modal fade" id="EditLeaveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content dropzone">
                 <div class="modal-header">
@@ -549,7 +599,7 @@ table-danger @endif">
                 </form>
             </div>
         </div>
-    </div>
+    </div>  --}}
 
     <script>
         $(document).ready(function() {
@@ -621,7 +671,7 @@ table-danger @endif">
                 }
             });
         });
-    </script> --}}
+    </script>
 
     <!--Edit-->
 @endpush

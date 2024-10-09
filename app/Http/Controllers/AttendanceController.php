@@ -67,7 +67,7 @@ class AttendanceController extends Controller
             if ($perdayattendance == null) {
                 if ($i > strtotime(date('d-M-Y'))) {
                     $data = ['status' => 'future', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => $i, 'day' => $day, 'name' => ''];
-                } elseif (strtotime($userdata->getMeta('joining')) > $i) {
+                } elseif (strtotime($userdata->getMeta('date_join')) > $i) {
                     $data = ['status' => 'beforejoining', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => $i, 'day' => $day, 'name' => 'Not Joined Yet'];
                 } else {
                     if (date('D', $i) == 'Sat' || date('D', $i) == 'Sun') {
@@ -138,7 +138,7 @@ class AttendanceController extends Controller
                 if ($data['timein'] != null) {
 
                     $timeIn = Carbon::createFromTimestamp($perdayattendance->timein);
-                    $shiftStartTime = Carbon::parse($userdata->shift->starting_hours);
+                    $shiftStartTime = Carbon::parse($userdata->shift->starting_time);
 
                     $shiftStartTimeWithGrace = $shiftStartTime->addMinutes($userdata->shift->grace_time);
 
@@ -165,31 +165,125 @@ class AttendanceController extends Controller
             $expecteddeduction = number_format($deduction * $perdaysalary, 2, '.', ',');
             array_push($attendance, $data);
         }
-
-
-        // dd($total_shift_hours);
-        // dd($totalShiftingHoursInHours);
+        
         $totalhours = array_sum(array_column($attendance, 'totalhours'));
-        // dd($totalhours);
 
         return view('attendance.index', compact(['userdata', 'attendance', 'firstday', 'lastday', 'month', 'year', 'annualleaves', 'casualleaves', 'sickleaves', 'earned', 'deduction', 'expecteddeduction',  'takenannualleaves', 'takencasualleaves', 'takensickleaves','totalhours']));
     }
-    public function timeIn(Request $request)
+    public function timeIn()
     {
-        $attendance = Attendance::create([
-            'user_id' => auth()->id(),
-            'timein' => now()->timestamp,
-            'date' => now()->startOfDay()->timestamp,
+        $userid = Auth::user()->id;
+        // $shift = Auth::user()->getMeta('shift_timings');
+        $timein = time();
+        if (date('H:i', $timein) >= '00:00' && date('H:i', $timein) <= '06:00') {
+            $date = strtotime(date('d-M-Y')) - 86400;
+        } else {
+            $date = strtotime(date('d-M-Y'));
+        }
+        $timein = Attendance::updateOrCreate([
+            'user_id' => $userid,
+            'date' => $date,
+        ], [
+            'timein' => $timein,
         ]);
-        return redirect()->back()->with('success', 'Checked in successfully');
+        $hrdepart = User::where('id', Auth::user()->id)->get();
+        $successmessage = 'Timed In Successfuly!';
+
+        return redirect()->back()->with('success', $successmessage);
     }
     
-    public function timeOut(Request $request, $id)
+    public function timeOut()
     {
-        $attendance = Attendance::findOrFail($id);
-        $attendance->timeout = now()->timestamp;
-        $attendance->totalhours = $attendance->timeout - $attendance->timein;
-        $attendance->save();
-        return redirect()->back()->with('success', 'Checked out successfully');
+        $userid = Auth::user()->id;
+        $timeout = time();
+        $date = strtotime(date('d-M-Y'));
+        $timein = Attendance::where('user_id', $userid)->latest()->first();
+        $timeout = Attendance::where(['user_id' => $userid, 'date' => $timein->date])->update(['timeout' => $timeout, 'totalhours' => ($timeout - ($timein->timein))]);
+        $successmessage = 'Timed Out Successfuly!';
+
+        return redirect()->back()->with('success', $successmessage);
+    }
+
+    public function attendanceCSV($id, $month, $year)
+    {
+        $userdata = User::find($id);
+        $numofdesc = Discrepancy::whereBetween('date', [\Carbon\Carbon::now()->startOfMonth()->timestamp, \Carbon\Carbon::now()->endOfMonth()->timestamp])->where('user_id', $id)->count();
+        $date = "01-" . $month . "-" . $year;
+        $firstday = strtotime(date('Y-m-01', strtotime($date)));
+        $lastday = strtotime(date('Y-m-t', strtotime($date)));
+        $attendance = array();
+        $annualleaves = LeaveTypes::where('name', 'Annual Leaves')->pluck('days')->first();
+        $casualleaves = LeaveTypes::where('name', 'Casual Leaves')->pluck('days')->first();
+        $sickleaves = LeaveTypes::where('name', 'Sick Leaves')->pluck('days')->first();
+        for ($i = $firstday; $i <= $lastday; $i += 86400) {
+
+            $disrepency = Discrepancy::where('user_id', $id)->where('date', $i)->count();
+            $disrepencystatus = Discrepancy::where('user_id', $id)->where('date', $i)->pluck('status')->first();
+            $forgettimeout = Discrepancy::where('user_id', $id)->where('date', $i)->pluck('timeout')->first();
+            if ($numofdesc >= 5) {
+                $disc_allowed = 0;
+            } else {
+                $disc_allowed = 1;
+            }
+            $perdayattendance = Attendance::where([['user_id', '=', $id], ['date', '=', $i]])->first();
+            $day = date('l', $i);
+            if ($perdayattendance == NULL) {
+                if ($i > strtotime(date('d-M-Y'))) {
+                    $data = ['status' => 'future', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => ''];
+                } elseif (strtotime($userdata->getMeta('date_join')) > $i) {
+                    $data = ['status' => 'beforejoining', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Not Joined Yet'];
+                } else {
+                    if (date('D', $i) == 'Sat' || date('D', $i) == 'Sun') {
+                        $data = ['status' => 'weekend', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Weekend'];
+                    } elseif (Holiday::where('date', $i)->count() > 0) {
+                        $data = ['status' => 'holiday', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Holiday (' . Holidays::where('holiday_date', $i)->pluck('name')->first() . ')'];
+                    } else {
+                        $data = ['status' => 'absent', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Absent'];
+                    }
+                }
+            } elseif ($perdayattendance->date == strtotime(date('d-M-Y')) && $perdayattendance->timeout == NULL) {
+                $data = ['status' => 'today', 'timein' => date('h:i:s A', $perdayattendance->timein), 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Today'];
+            } elseif ($perdayattendance->totalhours >= 16200 && $perdayattendance->totalhours <= 21600) {
+                $data = ['status' => 'halfday', 'timein' => date('h:i:s A', $perdayattendance->timein), 'timeout' => date('h:i:s A', $perdayattendance->timeout), 'totalhours' => gmdate('H:i:s', $perdayattendance->totalhours), 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Half Day'];
+            } elseif ($perdayattendance->totalhours < 16200 && $perdayattendance->totalhours != NULL) {
+
+                $data = ['status' => 'nohalfday', 'timein' => date('h:i:s A', $perdayattendance->timein), 'timeout' => date('h:i:s A', $perdayattendance->timeout), 'totalhours' => gmdate('H:i:s', $perdayattendance->totalhours), 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Less then Half Day (Absent)', 'no_of_leaves' => $noofleaves, 'leave_status' => $leavestatus, 'disc_allowed' => $disc_allowed ,'forget_time' => $forgettimeout ? $forgettimeout : '-', 'num_of_descrepancy' => $disrepency, 'disc_status' => $disrepencystatus, 'disc_allowed' => $disc_allowed ] ;
+            } elseif ($perdayattendance->timeout == NULL && $perdayattendance->timein != NULL) {
+                $data = ['status' => 'forgettotimeout', 'timein' => date('h:i:s A', $perdayattendance->timein), 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Forgot to Timeout'];
+            } else {
+                $data = ['status' => 'present', 'timein' => date('h:i:s A', $perdayattendance->timein), 'timeout' => date('h:i:s A', $perdayattendance->timeout), 'totalhours' => gmdate('H:i:s', $perdayattendance->totalhours), 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Present'];
+
+                if ($data['timein'] != null) {
+
+                    $timeIn = Carbon::createFromTimestamp($perdayattendance->timein);
+                    $shift = $userdata->shift;
+                    $shiftStartTime = Carbon::parse($shift->starting_time);
+
+                    $shiftStartTimeWithGrace = $shiftStartTime->addMinutes($shift->grace_time);
+
+                    if ($timeIn->format('H:i:s') > $shiftStartTimeWithGrace->format('H:i:s')) {
+                        $data['name'] = 'Late Check In';
+                    } else if ($perdayattendance->totalhours < ($shift->shift_hours * 3600)) {
+                        $data['name'] = 'Early Check Out';
+                    }
+                }
+                //present
+            }
+            array_push($attendance, $data);
+        }
+
+        $headers = array("Content-type" => "text/csv", "Content-Disposition" => "attachment; filename=attendance-" . $userdata->name . "-" . date('F', mktime(0, 0, 0, $month, 10)) . "-" . $year . ".csv", "Pragma" => "no-cache", "Cache-Control" => "must-revalidate, post-check=0, pre-check=0", "Expires" => "0");
+        $columns = array('Date', 'Day', 'Time In', 'Time Out', 'Working Hours', 'Status');
+        $callback = function () use ($attendance, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            foreach ($attendance as $row) {
+                $data = array($row['date'], $row['day'], $row['timein'], $row['timeout'], $row['totalhours'], $row['name']);
+
+                fputcsv($file, $data);
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
     }
 }

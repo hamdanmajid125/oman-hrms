@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{Leaves,LeaveTypes};
 use Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LeaveAppliedMail;
 class LeaveController extends Controller
 {
     public function allLeaves()
@@ -81,6 +83,48 @@ class LeaveController extends Controller
             }
         }
 
+        if ($msgstatus == 'success') {
+            $leaveDetails = [
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'reason' => $request->reason,
+                'type' => $typename,
+            ];
+    
+            $user = auth()->user();
+            Mail::to('omanhr@mailinator.com')->send(new LeaveAppliedMail($user, $leaveDetails));
+        }
+
         return redirect()->route('leaves.leave')->with($msgstatus,$message);
+    }
+
+    public function leaverequestajax(Request $request)
+    {
+        $date = $request->date;
+        $year = date('Y', $request->date);
+        if($request->halfday == NULL){$halfday = 0;}else{$halfday = 1;}
+        $typedays = LeaveTypes::where('id', $request->type)->pluck('days')->first();
+        $typename = LeaveTypes::where('id', $request->type)->pluck('name')->first();
+        $takendays = Leaves::where(['type' => $request->type, 'userid' => auth()->user()->id, 'year' => date('Y')])->count();
+        if($typedays == $takendays || $takendays > $typedays)
+        {
+            $message = $typename.' are completely availed by you';
+            $msgstatus = 'error';
+        }
+        else{
+            $leave = new Leaves;
+            $leave->date = $date;
+            $leave->year = $year;
+            $leave->userid = Auth::user()->id;
+            $leave->type = $request->type;
+            $leave->reason = $request->desc;
+            $leave->half_day = $halfday;
+            $leave->unit_id = Auth::user()->unit_id;
+            $leave->company_id = Auth::user()->company_id;
+            $leave->save();
+            $message = "Leave applied successfully!";
+            $msgstatus = 'success';
+        }
+        return $responce = [$message,$msgstatus];
     }
 }
