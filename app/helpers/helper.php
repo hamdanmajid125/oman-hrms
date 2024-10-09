@@ -2,6 +2,26 @@
 function profileimage(){
     return Auth::user()->image ? asset(Auth::user()->image) : asset('images/no-user.png');
 }
+function getWeeklyDates($year, $startDay = 'Monday') {
+    $date = new DateTime("$year-01-01");
+
+    $date->modify('first ' . $startDay . ' of January ' . $year);
+
+    $weeklyDates = [];
+
+    while ($date->format('Y') == $year) {
+        $startDate = clone $date;
+        $endDate = clone $date;
+        $endDate->modify('+6 days');
+
+        $weeklyDates[] = ['start_date' => $startDate->format('Y-m-d'),
+                           'end_date' => $endDate->format('Y-m-d')];
+
+        $date->modify('+1 week');
+    }
+
+    return $weeklyDates;
+}
 function currency_list(){
     return array(
         "AFA" => array("name" => "Afghan Afghani", "symbol" => "؋"),

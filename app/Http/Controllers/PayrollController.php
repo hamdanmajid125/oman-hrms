@@ -16,7 +16,14 @@ class PayrollController extends Controller
         }
         else{
             $start_date = date('Y-m-01');
-            $request->request->add(['start_date' => $start_date]); 
+            
+        }
+        if(request()->has('month')){
+            $month = $request->month;
+        }
+        else{
+            $month =  now()->format('m');
+      
         }
         if(request()->has('end_date')){
             $end_date = $request->end_date;
@@ -24,7 +31,22 @@ class PayrollController extends Controller
         else{
             $end_date = date('Y-m-t');
       
-            $request->request->add(['end_date' => $end_date]); 
+        }
+        if(request()->has('year')){
+            $year = $request->year;
+        }
+        else{
+            $year = now()->format('Y');
+      
+        }
+        if(request()->has('option')){
+            $option = $request->option;
+        }
+        else{
+            $option = 'monthly';
+        }
+        if (!request()->has('start_date') || !request()->has('end_date') || !request()->has('year') || !request()->has('option') || !request()->has('month')) {
+            return redirect()->route('payroll', ['start_date' => $start_date,'end_date' => $end_date,'year'=>$year, 'option'=>$option,'month'=>$month]);
         }
         $firstday = strtotime(date('Y-m-01', strtotime($start_date)));
         $lastday = strtotime(date('Y-m-t', strtotime($end_date)));
@@ -131,7 +153,6 @@ class PayrollController extends Controller
             }
            
             $totalAbsents = floor($early / 3) + floor($late / 3) + floor($halfday / 3) + $absent;
-         
             $totalSalaryDeduction = floatval($userdata->getMeta('after_tax_salary')) - (floatval($userdata->getMeta('after_tax_salary'))/30 * $totalAbsents);
             array_push($final_data,[
                 'id' =>$userdata->id,
