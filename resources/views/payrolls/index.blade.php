@@ -22,7 +22,18 @@
             <div class="card">
                 <div class="card-body payroll-filter">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="dept-select">Department</label>
+                                <select name="dept" class="form-select" id="dept-select">
+                                    <option value=null>All</option>
+                                    @foreach ($dept as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="year">Year</label>
                                 <select class="form-select" id="year-select">
@@ -34,7 +45,7 @@
                             </div>
 
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
 
                             <div class="form-group">
                                 <label for="year">Salary Cycle</label>
@@ -48,12 +59,14 @@
 
 
                         </div>
-                        <div class="col-md-4 main-filter">
-                            <div class="form-group" id="monthly" style="display: {{ request()->get('option') == 'monthly' ? 'block' : 'none' }};">
+                        <div class="col-md-3 main-filter">
+                            <div class="form-group" id="monthly"
+                                style="display: {{ request()->get('option') == 'monthly' ? 'block' : 'none' }};">
                                 <label for="month">Salary Month</label>
                                 <select name="month" id="month-select" class="form-select switch-select">
                                     @for ($i = 1; $i <= 12; $i++)
-                                        <option {{ request()->get('month') == $i ? 'selected' : '' }} value="{{ $i }}">
+                                        <option {{ request()->get('month') == $i ? 'selected' : '' }}
+                                            value="{{ $i }}">
                                             {{ DateTime::createFromFormat('!m', $i)->format('F') }}</option>
                                     @endfor
                                 </select>
@@ -94,16 +107,31 @@
                                 <tr>
                                     <td><img class="rounded-circle avatar-md" src="{{ asset($item['image']) }}"
                                             alt=""> <strong>{{ $item['name'] }}</strong> </td>
-                                    <td>{{ currency_list()[$item['currency']]['symbol'] . ' ' . $item['salary'] }}</td>
-                                    <td>{{ currency_list()[$item['currency']]['symbol'] . ' ' . $item['salary'] - $item['deduction'] }}
+                                    <td>{{ $item['currency'] . ' ' . $item['salary'] }}</td>
+                                    <td>{{ $item['currency'] . ' ' . $item['salary'] - $item['deduction'] }}
                                     </td>
-                                    <td>{{ currency_list()[$item['currency']]['symbol'] . ' ' . $item['deduction'] }}</td>
+                                    <td>{{ $item['currency'] . ' ' . $item['deduction'] }}</td>
                                     <td>
-                                        <a href="{{ route('attendance.index', ['id' => $item['id'], 'month' => request()->get('month'), 'year' => now()->format('Y')]) }}"
-                                            class="btn btn-sm btn-info">Show Attendance</a>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-primary btn-rounded dropdown-toggle" type="button"
+                                                id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="mdi mdi-chevron-down"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a href="{{ route('attendance.userAttendance', ['id' => $item['id'], 'month' => request()->get('month'), 'year' => now()->format('Y')]) }}"
+                                                    class="dropdown-item">Show Attendance</a>
+                                                <a class="dropdown-item"  onclick="event.preventDefault(); document.getElementById('payroll-form-{{ $item['id'] }}').submit();">Generate Payroll</a>
+                                                <form id="payroll-form-{{ $item['id'] }}" action="{{ route('logout') }}"
+                                                    method="POST" style="display: none;">
+                                                    @csrf
+                                                </form>
+                                            </div>
+                                        </div>
+
                                     </td>
                                 </tr>
                             @endforeach
+
                         </tbody>
                     </table>
                 </div>
@@ -138,10 +166,12 @@
         $('.payroll-filter .main-filter .form-select, #year-select').change(function() {
             let option = $('#cycle-select').find(':selected').val()
             let year = $('#year-select').find(':selected').val();
+            let dept = $('#dept-select').find(':selected').val();
             let data = {
                 month: $('#month-select').find(':selected').val(),
                 year: year,
                 option: option,
+                dept: dept,
 
             };
             if (option == 'monthly') {

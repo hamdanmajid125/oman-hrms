@@ -193,17 +193,16 @@
                                     value="{{ $data ? $data->getMeta('after_tax_salary') : old('meta[after_tax_salary]') }}"
                                     name="meta[after_tax_salary]" id="after_tax_salary" labelText="Salary After Tax"
                                     type="number" colClass="col-lg-4" required="true" />
-
                                 <div class="col-lg-4">
                                     <div class="mb-3">
+
+
                                         <label for="currency">Currency</label>
-                                        <select name="meta[currency]" id="currency" class="form-control">
+                                        <select name="meta[currency]" id="currency" class="form-control" required>
                                             @foreach (currency_list() as $item)
-                                                {{-- <option
-                                                    {{ $data ? ($data->getMeta('currency') ==  currency_list()[$data->getMeta('currency')]['symbol'] ? 'selected' : '') : '' }}
-                                                    {{ $item['code'] == 'USD' ? 'selected' : '' }}
-                                                    value="{{ $item['code'] }}">
-                                                    {{ $item['name'] . ' (' . $item['code'] . ')' }}</option> --}}
+                                                <option value="{{ $item['name'] . ' ' . '(' . $item['symbol'] . ')' }}"
+                                                    {{ $data->getMeta('currency') == $item['name'] . ' ' . '(' . $item['symbol'] . ')' ? 'selected' : ($item['name'] . ' ' . '(' . $item['symbol'] . ')' == 'US Dollar ($)' ? 'selected' : '') }}>
+                                                    {{ $item['name'] . ' ' . '(' . $item['symbol'] . ')' }}</option>
                                             @endforeach
                                         </select>
 
@@ -240,7 +239,8 @@
                                                             class="form-control" disabled>
                                                     </div>
                                                     <div class="col-md-1">
-                                                        <button class="btn btn-danger mt-4" onclick="deleteForm(this.parentElement.parentElement,{{ json_encode($item) }},{{ $data->id }},'amount')"
+                                                        <button class="btn btn-danger mt-4"
+                                                            onclick="deleteForm(this.parentElement.parentElement,{{ json_encode($item) }},{{ $data->id }},'amount')"
                                                             type="button">Delete</button>
                                                     </div>
                                                 </div>

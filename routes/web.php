@@ -43,7 +43,7 @@ use App\Http\Controllers\front\HomeController;
 */
 
 Route::get('/',[HomeController::class,'index'])->name('welcome');
-Route::get('jobs/{id}',[HomeController::class,'jobDetail'])->name('job.Detail');
+Route::get('job/{id}',[HomeController::class,'jobDetail'])->name('job.Detail');
 Route::get('apply-job/{id}',[HomeController::class,'applyJob'])->name('apply.Job');
 Route::post('submit-application',[HomeController::class,'submitApplication'])->name('submitApplication');
 
@@ -90,6 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::post('get-jobs', [JobController::class, 'getJobs'])->name('jobs.get');
 
     Route::get('payrolls',[PayrollController::class,'payroll'])->name('payroll');
+    Route::post('generate-payroll',[PayrollController::class,'generatePayroll'])->name('generate.payroll');
 
     Route::resource('jobs', JobController::class);
     Route::post('get-jobs', [JobController::class, 'getJobs'])->name('jobs.get');

@@ -45,13 +45,22 @@ class AttendanceController extends Controller
         $casualleaves = $totalcasualleaves - $takencasualleaves;
         $sickleaves = $totalsickleaves - $takensickleaves;
         $totalDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $usersalary = $userdata->getMeta('salary');
+        $usersalary = $userdata->getMeta('after_tax_salary');
         // $totalhours = Attendance::where('user_id',$id)->first();
         // dd($totalhours);
         $perdaysalary = $usersalary / $totalDays;
         $earned = 0;
         $deduction = 0;
         $halfdays = 0;
+
+
+        $absent = 0;
+        $late = 0;
+        $early = 0;
+        $halfday = 0;
+
+
+
         for ($i = $firstday; $i <= $lastday; $i += 86400) {
             $perdayattendance = Attendance::where([['user_id', '=', $id], ['date', '=', $i]])->first();
             $disrepency = Discrepancy::where('user_id', $id)->where('date', $i)->count();
@@ -89,6 +98,7 @@ class AttendanceController extends Controller
                             $name = 'Present';
                         }else{
                             $name = 'Absent';
+                            $absent++;
                         }
 
                     $data = ['status' => 'absent', 'timein' =>$forgettimein ? $forgettimein : '-', 'timeout' => '-', 'totalhours' => '-', 'date' => $i, 'day' => $day, 'name' => $name, 'no_of_leaves' => $noofleaves, 'leave_status' => $leavestatus,'num_of_descrepancy' => $disrepency, 'disc_status' => $disrepencystatus, 'disc_allowed' => $disc_allowed ,'forget_time_out' => $forgettimeout ? $forgettimeout : '-'];
@@ -105,6 +115,7 @@ class AttendanceController extends Controller
             } elseif ($perdayattendance->totalhours >= 16200 && $perdayattendance->totalhours <= 21600) {
                 $data = ['status' => 'halfday', 'timein' => $perdayattendance->timein, 'timeout' => $perdayattendance->timeout, 'totalhours' => $perdayattendance->totalhours, 'date' => $i, 'day' => $day, 'name' => 'Half Day'];
                 $halfdays += 1;
+                $halfday++;
             } elseif ($perdayattendance->totalhours < 16200 && $perdayattendance->totalhours != null) {
 
                 $noofleaves = Leaves::where(['date' => $i, 'user_id' => $id])->count();
@@ -115,6 +126,7 @@ class AttendanceController extends Controller
                     $earned += 1;
                 } else {
                     $deduction += 1;
+                    $absent++;
                 }
             } elseif ($perdayattendance->timeout == null && $perdayattendance->timein != null) {
                 $disrepency = Discrepancy::where('user_id', $id)->where('date', $i)->count();
@@ -144,8 +156,10 @@ class AttendanceController extends Controller
 
                     if ($timeIn->format('H:i:s') > $shiftStartTimeWithGrace->format('H:i:s')) {
                         $data['status'] = 'late';
+                        $late++;
                     } elseif ($perdayattendance->totalhours < ($userdata->shift->shift_hours * 3600)) {
                         $data['status'] = 'early';
+                        $early++;
                     }
                 }
             }
@@ -165,10 +179,11 @@ class AttendanceController extends Controller
             $expecteddeduction = number_format($deduction * $perdaysalary, 2, '.', ',');
             array_push($attendance, $data);
         }
-        
+        $totalAbsents = floor($early / 3) + floor($late / 3) + floor($halfday / 3) + $absent;
+            $totalSalaryDeduction = floatval($userdata->getMeta('after_tax_salary')) - (floatval($userdata->getMeta('after_tax_salary'))/30 * $totalAbsents);
         $totalhours = array_sum(array_column($attendance, 'totalhours'));
 
-        return view('attendance.index', compact(['userdata', 'attendance', 'firstday', 'lastday', 'month', 'year', 'annualleaves', 'casualleaves', 'sickleaves', 'earned', 'deduction', 'expecteddeduction',  'takenannualleaves', 'takencasualleaves', 'takensickleaves','totalhours']));
+        return view('attendance.index', compact(['userdata', 'attendance', 'firstday', 'lastday', 'month', 'year', 'annualleaves', 'casualleaves', 'sickleaves', 'earned', 'deduction', 'totalSalaryDeduction',  'takenannualleaves', 'takencasualleaves', 'takensickleaves','totalhours']));
     }
     public function timeIn()
     {
@@ -239,6 +254,7 @@ class AttendanceController extends Controller
                         $data = ['status' => 'holiday', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Holiday (' . Holidays::where('holiday_date', $i)->pluck('name')->first() . ')'];
                     } else {
                         $data = ['status' => 'absent', 'timein' => '-', 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Absent'];
+                        $absent++;
                     }
                 }
             } elseif ($perdayattendance->date == strtotime(date('d-M-Y')) && $perdayattendance->timeout == NULL) {
@@ -248,6 +264,7 @@ class AttendanceController extends Controller
             } elseif ($perdayattendance->totalhours < 16200 && $perdayattendance->totalhours != NULL) {
 
                 $data = ['status' => 'nohalfday', 'timein' => date('h:i:s A', $perdayattendance->timein), 'timeout' => date('h:i:s A', $perdayattendance->timeout), 'totalhours' => gmdate('H:i:s', $perdayattendance->totalhours), 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Less then Half Day (Absent)', 'no_of_leaves' => $noofleaves, 'leave_status' => $leavestatus, 'disc_allowed' => $disc_allowed ,'forget_time' => $forgettimeout ? $forgettimeout : '-', 'num_of_descrepancy' => $disrepency, 'disc_status' => $disrepencystatus, 'disc_allowed' => $disc_allowed ] ;
+                $absent++;
             } elseif ($perdayattendance->timeout == NULL && $perdayattendance->timein != NULL) {
                 $data = ['status' => 'forgettotimeout', 'timein' => date('h:i:s A', $perdayattendance->timein), 'timeout' => '-', 'totalhours' => '-', 'date' => date('d-M-Y', $i), 'day' => $day, 'name' => 'Forgot to Timeout'];
             } else {
@@ -263,8 +280,10 @@ class AttendanceController extends Controller
 
                     if ($timeIn->format('H:i:s') > $shiftStartTimeWithGrace->format('H:i:s')) {
                         $data['name'] = 'Late Check In';
+                        $late++;
                     } else if ($perdayattendance->totalhours < ($shift->shift_hours * 3600)) {
                         $data['name'] = 'Early Check Out';
+                        $early++;
                     }
                 }
                 //present

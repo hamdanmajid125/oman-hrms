@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Attendance,User, Discrepancy, LeaveTypes, Leaves, Holiday};
+use App\Models\{Attendance,User, Discrepancy, LeaveTypes, Leaves, Holiday, Department};
 use Carbon\Carbon;
+use PDF;
 
 class PayrollController extends Controller
 {
 
     public function payroll(Request $request)
     {
+        $dept = Department::all();
+
         if(request()->has('start_date')){
             $start_date = $request->start_date;
         }
@@ -46,12 +49,14 @@ class PayrollController extends Controller
             $option = 'monthly';
         }
         if (!request()->has('start_date') || !request()->has('end_date') || !request()->has('year') || !request()->has('option') || !request()->has('month')) {
-            return redirect()->route('payroll', ['start_date' => $start_date,'end_date' => $end_date,'year'=>$year, 'option'=>$option,'month'=>$month]);
+            return redirect()->route('payroll', ['start_date' => $start_date,'end_date' => $end_date,'year'=>$year, 'option'=>$option,'month'=>$month,'dept'=>$request->dept]);
         }
         $firstday = strtotime(date('Y-m-01', strtotime($start_date)));
         $lastday = strtotime(date('Y-m-t', strtotime($end_date)));
 
-        $users = User::withoutRole('admin')->get();
+        $users = User::withoutRole('admin')->when(request('dept') != 'null'&& request('dept'), function($query) {
+            return $query->where('department_id',request('dept'));
+        })->get();
         $attendance = array();
         $final_data = [];
         foreach ($users as $thisuser) {
@@ -88,9 +93,6 @@ class PayrollController extends Controller
                         if ($disrepencyofday->final_status !== 'approved') {
                             $absent++;
                          }
-                       
-                        
-
                     }
                     elseif ($perdayattendance == NULL) {
                         if ($i > strtotime(date('d-M-Y'))) {
@@ -154,6 +156,7 @@ class PayrollController extends Controller
            
             $totalAbsents = floor($early / 3) + floor($late / 3) + floor($halfday / 3) + $absent;
             $totalSalaryDeduction = floatval($userdata->getMeta('after_tax_salary')) - (floatval($userdata->getMeta('after_tax_salary'))/30 * $totalAbsents);
+
             array_push($final_data,[
                 'id' =>$userdata->id,
                 'currency' =>$userdata->getMeta('currency'),
@@ -163,7 +166,13 @@ class PayrollController extends Controller
                 'deduction' => $totalSalaryDeduction
             ]);
         }
-        return view('payrolls.index',compact('final_data'));
+        return view('payrolls.index',compact('final_data','dept'));
 
+    }
+
+    public function generatePayroll(Request $request)
+    {
+        $pdf = Pdf::loadView('pdf.payroll');
+        return $pdf->download('payroll.pdf');
     }
 }

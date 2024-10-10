@@ -161,7 +161,7 @@
                             <span>Sick Leaves left</span>
                         </div>
                         <div class="col-3 text-success">
-                            <h3>RS {{ $expecteddeduction }} </h3>
+                            <h3>RS {{ number_format( $totalSalaryDeduction) }} </h3>
                             <span>Expected Deduction</span>
                         </div>
                     </div>
