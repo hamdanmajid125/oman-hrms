@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Job,Department,Shift};
+use App\Models\{Job,Department,Shift,JobApplication};
 use Carbon\Carbon;
 class JobController extends Controller
 {
@@ -27,7 +27,7 @@ class JobController extends Controller
         });
         
         $total = $query->count();
-        $jobs = $query->skip($request->start)->take($request->length)->get(['id','job_title']);
+        $jobs = $query->skip($request->start)->take($request->length)->get(['id','job_title','start_date','end_date']);
         return response()->json([
             'recordsTotal' => $total,
             'recordsFiltered' => $total,
@@ -35,10 +35,26 @@ class JobController extends Controller
                 return [
                     'id' => $job->id,
                     'job_title' => $job->job_title,
-                    'action' => '<a href="'.route('jobs.edit', $job->id).'" class="btn btn-sm btn-primary">Edit</a>' 
+                    'start_date' => Carbon::createFromTimestamp($job->start_date)->format('d-M-Y'),
+                    'end_date' => Carbon::createFromTimestamp($job->end_date)->format('d-M-Y'),
+                    'action' => '<a href="'.route('jobs.edit', $job->id).'" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="'.route('job.Applicant', $job->id).'" class="btn btn-sm btn-info">See Applicants</a>' 
                 ];
             })
         ]);
+    }
+
+
+    public function jobApplicant($id)
+    {
+        $jobs = Job::find($id);
+        return view('jobs.job_applicants',compact('jobs'));
+    }
+
+    public function applicantDetail($id)
+    {
+        $detail = JobApplication::find($id);
+        return view('jobs.applicant_detail',compact('detail'));
     }
 
     /**

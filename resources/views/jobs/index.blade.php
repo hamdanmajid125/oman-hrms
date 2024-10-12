@@ -19,11 +19,14 @@
                 <div class="card-body">
 
                     <table class="datatable table table-bordered dt-responsive  nowrap w-100 datatable"
-                        data-get='{{ route('jobs.get') }}' data-filter='[{"data": "id", "title": "ID"}, {"data": "job_title", "title": "Job Title"}, {"data": "action", "title": "Action"}]'>
+                        data-get='{{ route('jobs.get') }}'
+                        data-filter='[{"data": "id", "title": "ID"}, {"data": "job_title", "title": "Job Title"},{"data": "start_date", "title": "Start Date"},{"data": "end_date", "title": "End Date"}, {"data": "action", "title": "Action"}]'>
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Job Title</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

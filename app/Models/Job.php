@@ -13,6 +13,6 @@ class Job extends Model
 
     public function jobApplication()
     {
-        return this->hasMany('JobApplication','job_id');    
+        return $this->hasMany(JobApplication::class,'job_id');    
     }
 }

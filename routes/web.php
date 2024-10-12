@@ -94,6 +94,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('jobs', JobController::class);
     Route::post('get-jobs', [JobController::class, 'getJobs'])->name('jobs.get');
+    Route::get('job-applicants/{id}',[JobController::class,'jobApplicant'])->name('job.Applicant');
+    Route::get('applicant-details/{id}',[JobController::class,'applicantDetail'])->name('applicantDetail');
 
 });
 
